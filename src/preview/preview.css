@@ -45,7 +45,7 @@ html, body {
   width: 8.5in;
   height: 11in;
   margin: 0 auto 32px auto;
-  padding: 0.8in;
+  padding: 0.5in 0.8in;
   background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -123,10 +123,21 @@ html, body {
 
   .page {
     width: 100%;
-    height: auto;
+    height: 11in;
     margin: 0;
-    padding: 0;
+    padding: 0.5in 0.8in;
     box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+  }
+
+  .cl-body {
+    flex: 1;
+  }
+
+  .cl-footer {
+    margin-top: auto;
   }
 
   .cl-header:focus,
@@ -140,6 +151,6 @@ html, body {
 
   @page {
     size: letter;
-    margin: 0.5in 1in;
+    margin: 0;
   }
 }
