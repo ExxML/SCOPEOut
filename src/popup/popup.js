@@ -48,8 +48,17 @@ async function init() {
 function toggleSettings() {
   const panel = $('settings-panel');
   const arrow = $('settings-arrow');
-  panel.classList.toggle('hidden');
-  arrow.classList.toggle('open');
+  const isClosed = panel.classList.contains('closed');
+  
+  if (isClosed) {
+    // Opening: remove closed class to trigger slide-in animation
+    panel.classList.remove('closed');
+    arrow.classList.add('open');
+  } else {
+    // Closing: add closed class to trigger slide-out animation
+    panel.classList.add('closed');
+    arrow.classList.remove('open');
+  }
 }
 
 /* ── Prompt Editor ───────────────────────────────── */

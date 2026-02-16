@@ -110,6 +110,18 @@ body {
   flex-direction: column;
   gap: 6px;
   background: #efe9d4;
+  max-height: 500px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out, padding 0.2s ease-in-out;
+  padding-top: 6px;
+}
+
+.settings-panel.closed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* ── Inputs ──────────────────────────────────────── */
@@ -268,3 +280,5 @@ select {
 .hidden {
   display: none !important;
 }
+
+/* Note: .settings-panel.hidden uses animation instead of display:none */
