@@ -236,7 +236,6 @@ select {
   background: #002145;
   color: #fff;
   width: 100%;
-  margin-top: 8px;
 }
 
 .btn-edit-prompt:hover {
@@ -280,5 +279,3 @@ select {
 .hidden {
   display: none !important;
 }
-
-/* Note: .settings-panel.hidden uses animation instead of display:none */
