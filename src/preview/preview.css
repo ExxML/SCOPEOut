@@ -6,11 +6,15 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   background: #f0f0f0;
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 12pt;
+  font-family: Calibri;
+  font-size: 11pt;
   color: #000;
+}
+
+.pages-container {
+  padding: 32px 0;
 }
 
 /* ── Download Button ─────────────────────────────── */
@@ -39,13 +43,20 @@ html, body {
 /* ── Letter Page ─────────────────────────────────── */
 .page {
   width: 8.5in;
-  min-height: 11in;
-  margin: 32px auto;
-  padding: 1in;
+  height: 11in;
+  margin: 0 auto 32px auto;
+  padding: 0.8in;
   background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+}
+
+.page:last-child {
+  margin-bottom: 32px;
 }
 
 /* ── Header ──────────────────────────────────────── */
@@ -62,10 +73,10 @@ html, body {
 
 /* ── Body ────────────────────────────────────────── */
 .cl-body {
-  flex: 1;
   line-height: 1.5;
   outline: none;
   white-space: pre-wrap;
+  flex: 1;
 }
 
 .cl-body:focus {
@@ -80,8 +91,9 @@ html, body {
 
 /* ── Footer ──────────────────────────────────────── */
 .cl-footer {
-  margin-top: 24pt;
+  margin-top: auto;
   text-align: center;
+  padding-top: 24pt;
 }
 
 .cl-footer img {
@@ -105,9 +117,13 @@ html, body {
     display: none !important;
   }
 
+  .pages-container {
+    padding: 0;
+  }
+
   .page {
     width: 100%;
-    min-height: auto;
+    height: auto;
     margin: 0;
     padding: 0;
     box-shadow: none;
@@ -124,6 +140,6 @@ html, body {
 
   @page {
     size: letter;
-    margin: 1in;
+    margin: 0.5in 1in;
   }
 }
