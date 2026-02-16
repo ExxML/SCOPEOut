@@ -16,9 +16,6 @@ async function init() {
   const stored = await chrome.storage.local.get(['geminiApiKey', 'geminiModel', 'apiKeyValid']);
   if (stored.geminiApiKey) {
     $('api-key-input').value = stored.geminiApiKey;
-    if (stored.apiKeyValid) {
-      showApiKeyStatus('API key saved.', 'success');
-    }
   }
   if (stored.geminiModel) {
     $('model-select').value = stored.geminiModel;
