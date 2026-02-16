@@ -115,11 +115,8 @@ function showApiKeyStatus(message, type) {
 
 /* ── API Key Validation ──────────────────────────── */
 async function validateApiKey(apiKey) {
-  const models = [
-    'gemini-2.5-flash-lite',
-    'gemini-2.5-flash',
-    'gemini-3-flash-preview'
-  ];
+  const modelSelect = $('model-select');
+  const models = Array.from(modelSelect.options).map(option => option.value);
   
   const results = await Promise.all(
     models.map(async (model) => {
