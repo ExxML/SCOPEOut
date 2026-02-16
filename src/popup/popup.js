@@ -36,6 +36,14 @@ async function init() {
   $('api-info-btn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://aistudio.google.com/welcome' });
   });
+
+  // Restore generation state from background and listen for changes
+  await restoreGenerationState();
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'session' && changes.generationState) {
+      handleGenerationStateChange(changes.generationState.newValue);
+    }
+  });
 }
 
 /* ── Settings Panel ──────────────────────────────── */
@@ -153,6 +161,49 @@ async function saveModel() {
   await chrome.storage.local.set({ geminiModel: $('model-select').value });
 }
 
+/* ── Generation State Persistence ────────────────── */
+async function restoreGenerationState() {
+  const { generationState } = await chrome.storage.session.get('generationState');
+  if (generationState) {
+    handleGenerationStateChange(generationState);
+  }
+}
+
+async function handleGenerationStateChange(state) {
+  const btn = $('generate-btn');
+  const spinner = $('btn-spinner');
+  const btnText = $('btn-text');
+
+  if (!state || state.status === 'idle') {
+    const { apiKeyValid } = await chrome.storage.local.get('apiKeyValid');
+    updateGenerateButtonState(apiKeyValid);
+    spinner.classList.add('hidden');
+    btnText.textContent = 'Generate Cover Letter';
+    return;
+  }
+
+  if (state.status === 'generating') {
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Generating…';
+    showStatus(state.message);
+    return;
+  }
+
+  // Complete or error: show message and reset button
+  if (state.status === 'complete') {
+    showStatus(state.message, 'success');
+  } else if (state.status === 'error') {
+    showStatus(state.message, 'error');
+  }
+
+  const { apiKeyValid } = await chrome.storage.local.get('apiKeyValid');
+  updateGenerateButtonState(apiKeyValid);
+  spinner.classList.add('hidden');
+  btnText.textContent = 'Generate Cover Letter';
+  await chrome.storage.session.remove('generationState');
+}
+
 /* ── Generate Cover Letter ───────────────────────── */
 async function handleGenerate() {
   const btn = $('generate-btn');
@@ -166,12 +217,6 @@ async function handleGenerate() {
     return;
   }
 
-  // Disable button, show spinner
-  btn.disabled = true;
-  spinner.classList.remove('hidden');
-  btnText.textContent = 'Generating…';
-  showStatus('Scraping job details from SCOPE…');
-
   try {
     // Get the active tab
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -182,47 +227,22 @@ async function handleGenerate() {
       throw new Error('Please navigate to a SCOPE job posting page first.');
     }
 
-    // Inject content script and scrape job details
-    const [result] = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ['content/scraper.js']
-    });
+    // Disable button, show spinner
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Generating…';
+    showStatus('Extracting job details…');
 
-    const jobData = result.result;
-    if (!jobData || !jobData.jobDescription) {
-      throw new Error('Could not extract job details. Make sure you are on a job posting page.');
-    }
-
-    showStatus(`Found: ${jobData.jobTitle} at ${jobData.companyName}. Calling Gemini…`);
-
-    // Send to background worker for Gemini API call
+    // Hand off to background service worker (fire-and-forget)
     const model = $('model-select').value;
-    const response = await chrome.runtime.sendMessage({
-      action: 'generateCoverLetter',
-      jobData,
+    chrome.runtime.sendMessage({
+      action: 'startGeneration',
+      tabId: tab.id,
       model,
       apiKey: geminiApiKey
     });
-
-    if (response.error) {
-      throw new Error(response.error);
-    }
-
-    showStatus('Cover letter generated! Opening preview…', 'success');
-
-    // Open preview tab via background worker
-    await chrome.runtime.sendMessage({
-      action: 'openPreview',
-      coverLetterBody: response.coverLetterBody,
-      companyName: jobData.companyName,
-      jobTitle: jobData.jobTitle
-    });
   } catch (err) {
     showStatus(err.message, 'error');
-  } finally {
-    btn.disabled = false;
-    spinner.classList.add('hidden');
-    btnText.textContent = 'Generate Cover Letter';
   }
 }
 
