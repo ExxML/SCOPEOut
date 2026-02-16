@@ -7,12 +7,39 @@
 
 import { DEFAULT_PROMPT } from '../api/default-prompt.js';
 
+// Track unsaved changes
+let hasUnsavedChanges = false;
+let savedPromptContent = '';
+
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
   loadPrompt();
   document.getElementById('save-btn').addEventListener('click', savePrompt);
   document.getElementById('restore-btn').addEventListener('click', restoreDefaultPrompt);
+  document.getElementById('prompt-textarea').addEventListener('input', handlePromptChange);
+}
+
+/**
+ * Handles changes to the prompt textarea.
+ */
+function handlePromptChange() {
+  const textarea = document.getElementById('prompt-textarea');
+  const currentContent = textarea.value;
+  
+  hasUnsavedChanges = currentContent !== savedPromptContent;
+  updateTabTitle();
+}
+
+/**
+ * Updates the tab title based on unsaved changes.
+ */
+function updateTabTitle() {
+  if (hasUnsavedChanges) {
+    document.title = 'Prompt Editor (*)';
+  } else {
+    document.title = 'Prompt Editor';
+  }
 }
 
 /**
@@ -25,10 +52,15 @@ async function loadPrompt() {
   
   if (prompt) {
     textarea.value = prompt;
+    savedPromptContent = prompt;
   } else {
     // Set default prompt
     textarea.value = DEFAULT_PROMPT;
+    savedPromptContent = DEFAULT_PROMPT;
   }
+  
+  hasUnsavedChanges = false;
+  updateTabTitle();
 }
 
 /**
@@ -45,6 +77,11 @@ async function savePrompt() {
   }
   
   await chrome.storage.local.set({ prompt: promptText });
+  
+  // Update saved content and reset unsaved changes flag
+  savedPromptContent = promptText;
+  hasUnsavedChanges = false;
+  updateTabTitle();
   
   // Visual feedback
   saveBtn.textContent = '✓ Prompt Saved';
@@ -63,5 +100,18 @@ function restoreDefaultPrompt() {
   if (confirm('Are you sure you want to restore the default prompt? This will overwrite your current prompt.')) {
     const textarea = document.getElementById('prompt-textarea');
     textarea.value = DEFAULT_PROMPT;
+    
+    // Trigger change detection
+    handlePromptChange();
   }
 }
+
+/**
+ * Warns the user before closing if there are unsaved changes.
+ */
+window.addEventListener('beforeunload', (event) => {
+  if (hasUnsavedChanges) {
+    event.preventDefault();
+    event.returnValue = ''; // Chrome requires a returnValue
+  }
+});
