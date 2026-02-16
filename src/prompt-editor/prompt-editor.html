@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Editor</title>
+  <link rel="stylesheet" href="prompt-editor.css">
+</head>
+<body>
+  <!-- Save button (top-right, hidden during print) -->
+  <button id="save-btn" class="save-btn" title="Save Prompt">
+    Save Prompt
+  </button>
+
+  <!-- Restore default button (bottom-right, hidden during print) -->
+  <button id="restore-btn" class="restore-btn" title="Restore Default Prompt">
+    Restore Default Prompt
+  </button>
+
+  <!-- Prompt editor container -->
+  <div id="editor-container" class="editor-container">
+    <div class="page">
+      <header class="prompt-header">
+        <h1>AI Prompt Editor</h1>
+        <p class="instructions">
+          Use <code>{companyName}</code>, <code>{jobTitle}</code>, 
+          and <code>{jobDescription}</code> to insert job-specific details.
+        </p>
+      </header>
+      
+      <section class="prompt-body">
+        <textarea id="prompt-textarea" placeholder="Enter your prompt here..."></textarea>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="prompt-editor.js"></script>
+</body>
+</html>

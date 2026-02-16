@@ -1,0 +1,170 @@
+/* ── Page Reset ───────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+  background: #f0f0f0;
+  font-family: Calibri, 'Segoe UI', system-ui, sans-serif;
+  font-size: 11pt;
+  color: #000;
+  overflow: hidden;
+}
+
+.editor-container {
+  height: 100vh;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Save Button ─────────────────────────────────── */
+.save-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #002145;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.save-btn:hover {
+  background: #003366;
+}
+
+.save-btn:active {
+  background: #001a33;
+}
+
+.save-btn.saved {
+  background: #28a745;
+}
+
+/* ── Restore Button ──────────────────────────────── */
+.restore-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.restore-btn:hover {
+  background: #5a6268;
+}
+
+.restore-btn:active {
+  background: #4e555b;
+}
+
+/* ── Editor Page ─────────────────────────────────── */
+.page {
+  width: 8.5in;
+  height: calc(100vh - 32px);
+  padding: 32px 48px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+/* ── Header ──────────────────────────────────────── */
+.prompt-header {
+  margin-bottom: 16pt;
+}
+.prompt-header h1 {
+  font-size: 20pt;
+  color: #002145;
+  margin-bottom: 8pt;
+}
+
+.instructions {
+  font-size: 10pt;
+  color: #666;
+  line-height: 1.6;
+}
+
+.instructions code {
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 9pt;
+  color: #002145;
+}
+
+/* ── Body ────────────────────────────────────────── */
+.prompt-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#prompt-textarea {
+  flex: 1;
+  width: 100%;
+  padding: 16pt;
+  font-family: Calibri, 'Segoe UI', system-ui, sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  overflow-y: auto;
+}
+
+#prompt-textarea:focus {
+  border-color: #002145;
+  box-shadow: 0 0 0 2px rgba(0, 33, 69, 0.1);
+}
+
+#prompt-textarea::placeholder {
+  color: #999;
+}
+
+/* ── Print Styles ────────────────────────────────── */
+@media print {
+  .save-btn,
+  .restore-btn {
+    display: none;
+  }
+  
+  body {
+    background: #fff;
+  }
+  
+  .editor-container {
+    padding: 0;
+  }
+  
+  .page {
+    box-shadow: none;
+    margin: 0;
+  }
+}

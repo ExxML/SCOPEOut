@@ -33,7 +33,15 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["preview/preview.html", "preview/preview.css", "preview/preview.js", "assets/science_coop_footer.png"],
+      "resources": [
+        "preview/preview.html", 
+        "preview/preview.css", 
+        "preview/preview.js", 
+        "prompt-editor/prompt-editor.html",
+        "prompt-editor/prompt-editor.css",
+        "prompt-editor/prompt-editor.js",
+        "assets/science_coop_footer.png"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

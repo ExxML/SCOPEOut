@@ -189,22 +189,22 @@ select {
   gap: 8px;
 }
 
-.btn-primary {
+.btn-generate-cover-letter {
   background: #002145;
   color: #fff;
 }
 
-.btn-primary:hover {
+.btn-generate-cover-letter:hover {
   background: #003366;
 }
 
-.btn-primary:disabled {
+.btn-generate-cover-letter:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background: #666;
 }
 
-.btn-small {
+.btn-save {
   padding: 6px 12px;
   font-size: 12px;
   background: #002145;
@@ -212,7 +212,20 @@ select {
   border-radius: 4px;
 }
 
-.btn-small:hover {
+.btn-save:hover {
+  background: #003366;
+}
+
+.btn-edit-prompt {
+  padding: 8px 16px;
+  font-size: 13px;
+  background: #002145;
+  color: #fff;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-edit-prompt:hover {
   background: #003366;
 }
 

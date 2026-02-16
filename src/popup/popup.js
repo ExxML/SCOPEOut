@@ -31,6 +31,7 @@ async function init() {
   $('settings-toggle').addEventListener('click', toggleSettings);
   $('toggle-password').addEventListener('click', togglePasswordVisibility);
   $('save-api-key').addEventListener('click', saveApiKey);
+  $('edit-prompt-btn').addEventListener('click', openPromptEditor);
   $('model-select').addEventListener('change', saveModel);
   $('generate-btn').addEventListener('click', handleGenerate);
   $('api-info-btn').addEventListener('click', () => {
@@ -52,6 +53,11 @@ function toggleSettings() {
   const arrow = $('settings-arrow');
   panel.classList.toggle('hidden');
   arrow.classList.toggle('open');
+}
+
+/* ── Prompt Editor ───────────────────────────────── */
+function openPromptEditor() {
+  chrome.tabs.create({ url: chrome.runtime.getURL('prompt-editor/prompt-editor.html') });
 }
 
 /* ── Password Toggle ─────────────────────────────── */
@@ -220,9 +226,9 @@ async function handleGenerate() {
     if (!tab) throw new Error('No active tab found.');
 
     // Validate we're on a SCOPE page
-    if (!tab.url || !tab.url.includes('scope.sciencecoop.ubc.ca')) {
-      throw new Error('Please navigate to a SCOPE job posting page first.');
-    }
+    // if (!tab.url || !tab.url.includes('scope.sciencecoop.ubc.ca')) {
+    //   throw new Error('Please navigate to a SCOPE job posting page first.');
+    // }
 
     // Disable button, show spinner
     btn.disabled = true;
