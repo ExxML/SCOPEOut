@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter Preview — SCOPEOut</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <!-- Download button (top-right, hidden during print) -->
+  <button id="download-btn" class="download-btn" title="Download as PDF">
+    ⬇ Download PDF
+  </button>
+
+  <!-- Cover letter page -->
+  <div id="cover-letter" class="page">
+    <!-- Header: company, date, job title -->
+    <header id="cl-header" class="cl-header" contenteditable="true"></header>
+
+    <!-- Body: AI-generated paragraphs -->
+    <section id="cl-body" class="cl-body" contenteditable="true"></section>
+
+    <!-- Footer: co-op logo -->
+    <footer class="cl-footer">
+      <img id="cl-footer-logo" src="" alt="UBC Science Co-op">
+    </footer>
+  </div>
+
+  <script src="preview.js"></script>
+</body>
+</html>

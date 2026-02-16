@@ -1,0 +1,129 @@
+/* ── Page Reset ───────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: #f0f0f0;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  color: #000;
+}
+
+/* ── Download Button ─────────────────────────────── */
+.download-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #002145;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.download-btn:hover {
+  background: #003366;
+}
+
+/* ── Letter Page ─────────────────────────────────── */
+.page {
+  width: 8.5in;
+  min-height: 11in;
+  margin: 32px auto;
+  padding: 1in;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────── */
+.cl-header {
+  margin-bottom: 24pt;
+  line-height: 1.6;
+  outline: none;
+}
+
+.cl-header:focus {
+  outline: 2px dashed #ccc;
+  outline-offset: 4px;
+}
+
+/* ── Body ────────────────────────────────────────── */
+.cl-body {
+  flex: 1;
+  line-height: 1.5;
+  outline: none;
+  white-space: pre-wrap;
+}
+
+.cl-body:focus {
+  outline: 2px dashed #ccc;
+  outline-offset: 4px;
+}
+
+.cl-body p {
+  margin-bottom: 12pt;
+  text-indent: 0;
+}
+
+/* ── Footer ──────────────────────────────────────── */
+.cl-footer {
+  margin-top: 24pt;
+  text-align: center;
+}
+
+.cl-footer img {
+  max-width: 100%;
+  height: auto;
+  max-height: 80px;
+}
+
+/* ── Editable Hover Hint ─────────────────────────── */
+[contenteditable="true"]:hover {
+  background: rgba(0, 33, 69, 0.02);
+}
+
+/* ── Print / PDF Styles ──────────────────────────── */
+@media print {
+  html, body {
+    background: #fff;
+  }
+
+  .download-btn {
+    display: none !important;
+  }
+
+  .page {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .cl-header:focus,
+  .cl-body:focus {
+    outline: none;
+  }
+
+  [contenteditable="true"]:hover {
+    background: none;
+  }
+
+  @page {
+    size: letter;
+    margin: 1in;
+  }
+}

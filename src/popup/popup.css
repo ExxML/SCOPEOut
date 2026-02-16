@@ -1,0 +1,255 @@
+/* ── Reset & Base ─────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #efe9d4;
+}
+
+/* ── Layout ──────────────────────────────────────── */
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #002145; /* UBC dark blue */
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #002145;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* ── Sections ────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #002145;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+  outline: none;
+}
+
+.info-btn:hover {
+  color: #003366;
+}
+
+/* ── Settings Toggle ─────────────────────────────── */
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #002145;
+  padding: 4px 0;
+}
+
+.settings-icon {
+  font-size: 14px;
+}
+
+.arrow {
+  margin-left: auto;
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.arrow.open {
+  transform: rotate(90deg);
+}
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #efe9d4;
+}
+
+/* ── Inputs ──────────────────────────────────────── */
+.api-key-row {
+  display: flex;
+  gap: 6px;
+}
+
+.input-with-toggle {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-toggle input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 36px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.2s;
+  outline: none;
+  opacity: 1;
+}
+
+.toggle-password-btn:hover {
+  color: #002145;
+}
+
+.toggle-password-btn:focus {
+  color: #002145;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #002145;
+}
+
+select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+/* ── Buttons ─────────────────────────────────────── */
+.btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #002145;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #003366;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #666;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  background: #002145;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.btn-small:hover {
+  background: #003366;
+}
+
+/* ── Spinner ─────────────────────────────────────── */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Status ──────────────────────────────────────── */
+.status-area {
+  background: #efe9d4;
+}
+
+.status-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.status-text.error {
+  color: #c0392b;
+}
+
+.status-text.success {
+  color: #27ae60;
+}
+
+/* ── Utility ─────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}

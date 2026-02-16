@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCOPEOut</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>SCOPEOut</h1>
+      <p class="subtitle">AI Cover Letter Generator</p>
+    </header>
+
+    <!-- Settings Section (collapsible) -->
+    <div class="section">
+      <button id="settings-toggle" class="settings-toggle" type="button">
+        <span class="settings-icon">⚙</span> Settings
+        <span id="settings-arrow" class="arrow">▸</span>
+      </button>
+      <div id="settings-panel" class="settings-panel hidden">
+        <div class="label-with-info">
+          <label for="api-key-input" class="label">Gemini API Key</label>
+          <button id="api-info-btn" class="info-btn" type="button" title="Get a free Gemini API Key">ⓘ</button>
+        </div>
+        <div class="api-key-row">
+          <div class="input-with-toggle">
+            <input type="password" id="api-key-input" placeholder="Enter your API key" autocomplete="off">
+            <button id="toggle-password" class="toggle-password-btn" type="button">
+              <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg id="eye-off-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <button id="save-api-key" class="btn btn-small" type="button">Save</button>
+        </div>
+        <p id="api-key-status" class="status-text"></p>
+      </div>
+    </div>
+
+    <!-- Model Selection -->
+    <div class="section">
+      <label for="model-select" class="label">Model</label>
+      <select id="model-select">
+        <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (10 rpm, 20 rpd)</option>
+        <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (5 rpm, 20 rpd)</option>
+        <option value="gemini-3-flash-preview">Gemini 3 Flash Preview (5 rpm, 20 rpd)</option>
+      </select>
+    </div>
+
+    <!-- Generate Button -->
+    <button id="generate-btn" class="btn btn-primary" type="button">
+      <span id="btn-text">Generate Cover Letter</span>
+      <span id="btn-spinner" class="spinner hidden"></span>
+    </button>
+
+    <!-- Status Messages -->
+    <div id="status-area" class="status-area hidden">
+      <p id="status-message" class="status-text"></p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
