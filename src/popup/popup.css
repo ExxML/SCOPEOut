@@ -91,10 +91,12 @@ body {
 
 .settings-icon {
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .arrow {
-  margin-left: auto;
   font-size: 12px;
   transition: transform 0.2s;
 }
