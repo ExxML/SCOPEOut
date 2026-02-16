@@ -99,11 +99,11 @@ async function saveApiKey() {
     showApiKeyStatus('API key saved.', 'success');
     updateGenerateButtonState(true);
     
-    // Clear message after 3 seconds
+    // Clear message after a delay
     if (statusTimeout) clearTimeout(statusTimeout);
     statusTimeout = setTimeout(() => {
       $('api-key-status').textContent = '';
-    }, 3000);
+    }, 2000);
   } else {
     // Some models inaccessible - show error and disable button
     await chrome.storage.local.set({ geminiApiKey: key, apiKeyValid: false });
