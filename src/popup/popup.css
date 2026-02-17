@@ -18,7 +18,7 @@ body {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .header {
@@ -43,7 +43,7 @@ body {
 .section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
 .label {
@@ -86,7 +86,7 @@ body {
   cursor: pointer;
   font-size: 13px;
   color: #002145;
-  padding: 4px 0;
+  padding-top: 6px;
 }
 
 .settings-icon {
@@ -108,13 +108,14 @@ body {
 .settings-panel {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   background: #efe9d4;
   max-height: 500px;
   overflow: hidden;
   opacity: 1;
   transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out, padding 0.2s ease-in-out;
   padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .settings-panel.closed {
@@ -206,6 +207,7 @@ select {
 .btn-generate-cover-letter {
   background: #002145;
   color: #fff;
+  margin-top: 4px;
 }
 
 .btn-generate-cover-letter:hover {
