@@ -108,14 +108,14 @@ body {
 .settings-panel {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   background: #efe9d4;
   max-height: 500px;
   overflow: hidden;
   opacity: 1;
   transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out, padding 0.2s ease-in-out;
   padding-top: 6px;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
 }
 
 .settings-panel.closed {
@@ -207,7 +207,7 @@ select {
 .btn-generate-cover-letter {
   background: #002145;
   color: #fff;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .btn-generate-cover-letter:hover {
