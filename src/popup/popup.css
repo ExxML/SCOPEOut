@@ -197,7 +197,7 @@ select {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition: background-color 1s, opacity 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
