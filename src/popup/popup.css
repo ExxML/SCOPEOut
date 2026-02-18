@@ -293,7 +293,7 @@ select {
 .footer {
   display: flex;
   justify-content: right;
-  padding: 6px 6px 6px 0px;
+  padding: 8px;
 }
 
 .github-link {
