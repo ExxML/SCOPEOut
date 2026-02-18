@@ -61,7 +61,7 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
     await chrome.storage.session.set({
       generationState: {
         status: 'generating',
-        message: `Found: ${jobData.jobTitle} at ${jobData.companyName}. Calling Gemini…`
+        message: `Found job: ${jobData.jobTitle} at ${jobData.companyName}.\nGenerating cover letter…`
       }
     });
 
