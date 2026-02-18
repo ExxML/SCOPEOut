@@ -232,9 +232,9 @@ async function handleGenerate() {
     if (!tab) throw new Error('No active tab found.');
 
     // Validate we're on a SCOPE page
-    // if (!tab.url || !tab.url.includes('scope.sciencecoop.ubc.ca')) {
-    //   throw new Error('Please navigate to a SCOPE job posting page first.');
-    // }
+    if (!tab.url || !tab.url.includes('scope.sciencecoop.ubc.ca')) {
+      throw new Error('Please navigate to a SCOPE job posting page first.');
+    }
 
     // Disable button, show spinner
     btn.disabled = true;
