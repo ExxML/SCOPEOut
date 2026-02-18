@@ -55,7 +55,7 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
 
     const jobData = result.result;
     if (!jobData || !jobData.jobDescription) {
-      throw new Error('Could not extract job details. Make sure you are on a job posting page.');
+      throw new Error('Could not extract job details. Make sure you are on a SCOPE job posting page.');
     }
 
     await chrome.storage.session.set({
