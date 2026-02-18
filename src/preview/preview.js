@@ -26,6 +26,7 @@ function loadCoverLetter() {
     }
 
     const { coverLetterBody, companyName, jobTitle } = data;
+    document.title = `${companyName} Cover Letter`;
     renderMultiPageLetter(companyName, jobTitle, coverLetterBody);
   });
 }
