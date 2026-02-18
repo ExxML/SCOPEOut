@@ -187,7 +187,7 @@ async function handleGenerationStateChange(state) {
     const { apiKeyValid } = await chrome.storage.local.get('apiKeyValid');
     updateGenerateButtonState(apiKeyValid);
     spinner.classList.add('hidden');
-    btnText.textContent = 'Generate Cover Letter';
+    btnText.textContent = 'Generate cover letter';
     return;
   }
 
@@ -209,11 +209,11 @@ async function handleGenerationStateChange(state) {
   const { apiKeyValid } = await chrome.storage.local.get('apiKeyValid');
   updateGenerateButtonState(apiKeyValid);
   spinner.classList.add('hidden');
-  btnText.textContent = 'Generate Cover Letter';
+  btnText.textContent = 'Generate cover letter';
   await chrome.storage.session.remove('generationState');
 }
 
-/* ── Generate Cover Letter ───────────────────────── */
+/* ── Cover Letter Generation ───────────────────────── */
 async function handleGenerate() {
   const btn = $('generate-btn');
   const spinner = $('btn-spinner');
