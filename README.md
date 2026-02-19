@@ -29,7 +29,7 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 </div>
 
 <div align="center">
-  <img src="app_preview/prompt_editor_page.png" alt="SCOPEOut Popup" width="400" style="margin: 5px 10px 0 0;">
+  <img src="app_preview/prompt_editor_page.png" alt="SCOPEOut Popup" width="400" style="margin: 0 10px 0 0;">
   <img src="app_preview/generated_cover_letter.png" alt="SCOPEOut Prompt Editor Page" width="400">
 </div>
 
