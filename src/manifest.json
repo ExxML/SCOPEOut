@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SCOPEOut",
   "version": "1.0.0",
-  "description": "Generate AI-powered cover letters from SCOPE job postings using Gemini.",
+  "description": "Cover letter generator for SCOPE jobs.",
   "icons": {
     "16": "assets/scope_out_icon.png",
     "32": "assets/scope_out_icon.png",
