@@ -15,7 +15,7 @@ body {
 
 /* ── Layout ──────────────────────────────────────── */
 .container {
-  padding: 16px 16px 0px 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -41,6 +41,15 @@ body {
   font-size: 20px;
   font-weight: 700;
   color: #002145;
+}
+
+.header-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .subtitle {
@@ -287,26 +296,6 @@ select {
 
 .status-text.success {
   color: #27ae60;
-}
-
-/* ── Footer ─────────────────────────────────────── */
-.footer {
-  display: flex;
-  justify-content: right;
-  padding: 8px;
-}
-
-.github-link {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: #555;
-  text-decoration: none;
-}
-
-.github-link:hover {
-  color: #002145;
 }
 
 /* ── Utility ─────────────────────────────────────── */
