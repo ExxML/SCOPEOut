@@ -163,6 +163,13 @@ body {
   padding-right: 36px;
 }
 
+/* Suppress the browser's native password-reveal eye icon */
+.input-with-toggle input::-ms-reveal,
+.input-with-toggle input::-webkit-credentials-auto-fill-button,
+.input-with-toggle input::-webkit-contacts-auto-fill-button {
+  display: none;
+}
+
 .toggle-password-btn {
   position: absolute;
   right: 8px;
