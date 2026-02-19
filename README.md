@@ -14,6 +14,7 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 </div>
 
 ## 📑 Table of Contents
+- [👀 App Preview](#-app-preview)
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [📁 Project Structure](#-project-structure)
@@ -21,6 +22,16 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 - [⚙️ Configuration](#️-configuration)
 - [🤖 How It Works](#-how-it-works)
 - [📝 License](#-license)
+
+## 👀 App Preview
+<div align="center">
+  <img src="previews/popup.png" alt="SCOPEOut Popup" height="300" style="margin: 0 10px 0 0;">
+  <img src="previews/prompt_editor_page.png" alt="SCOPEOut Prompt Editor Page" height="300">
+</div>
+
+<p align="center">
+  <img src="previews/generated_cover_letter.png" alt="SCOPEOut Generated Cover Letter" height="300">
+</p>
 
 ## ✨ Features
 
