@@ -25,7 +25,7 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 
 ## 👀 App Preview
 <div align="center">
-  <img src="app_preview/popup.png" alt="SCOPEOut Generated Cover Letter" width="400">
+  <img src="app_preview/popup.png" alt="SCOPEOut Generated Cover Letter" height="250">
 </div>
 
 <div align="center">
