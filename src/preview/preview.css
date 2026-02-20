@@ -89,6 +89,12 @@ html, body {
   text-indent: 0;
 }
 
+/* ── Links ───────────────────────────────────────── */
+.page a {
+  color: #1154cc;
+  text-decoration: underline;
+}
+
 /* ── Footer ──────────────────────────────────────── */
 .cl-footer {
   margin-top: auto;

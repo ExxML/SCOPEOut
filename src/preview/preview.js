@@ -72,7 +72,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText) {
     .map((p) => p.trim())
     .filter((p) => p.length > 0)
     .map((p) => {
-      const content = p.replace(/\n/g, '<br>');
+      const content = linkifyText(p.replace(/\n/g, '<br>'));
       return `<p>${content}</p>`;
     });
 
@@ -144,6 +144,38 @@ function addFooter(page) {
   logo.alt = 'UBC Science Co-op';
   footer.appendChild(logo);
   page.appendChild(footer);
+}
+
+/**
+ * Wraps plain-text links in the given HTML string with anchor tags.
+ * Handles:
+ *   - Email addresses (e.g. user@example.com) → mailto: link
+ *   - Domains with common TLDs (e.g. example.com, → target="_blank" link
+ *     sciencecoop.ubc.ca, www.example.com,
+ *     https://example.com/path)
+ *
+ * Email is tested first so "user@example.com" is never partially matched
+ * as a bare domain.
+ */
+function linkifyText(html) {
+  const pattern = new RegExp(
+    // 1. Email address
+    '([a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,})' +
+    // 2. Domain with optional scheme/www prefix and common TLD
+    '|([a-zA-Z0-9][a-zA-Z0-9.\\-]*' +
+      '\\.(?:com|ca|org|net|edu|gov|io|co|uk|us|au|nz|de|fr|jp|cn|info|biz|me|app|dev|tech)' +
+      '(?:\\/[^\\s<>"\']*)?)',
+    'g'
+  );
+
+  return html.replace(pattern, (match, email, domain) => {
+    if (email)  return `<a href="mailto:${email}">${email}</a>`;
+    if (domain) {
+      const href = /^https?:\/\//i.test(domain) ? domain : `https://${domain}`;
+      return `<a href="${href}" target="_blank">${domain}</a>`;
+    }
+    return match;
+  });
 }
 
 /**
