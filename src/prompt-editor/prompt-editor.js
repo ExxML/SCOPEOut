@@ -18,6 +18,12 @@ function init() {
   document.getElementById('save-btn').addEventListener('click', savePrompt);
   document.getElementById('restore-btn').addEventListener('click', restoreDefaultPrompt);
   document.getElementById('prompt-textarea').addEventListener('input', handlePromptChange);
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+      savePrompt();
+    }
+  });
 }
 
 /**
@@ -66,6 +72,8 @@ async function loadPrompt() {
 /**
  * Saves the current prompt to storage.
  */
+let savePromptTimeout = null;
+
 async function savePrompt() {
   const textarea = document.getElementById('prompt-textarea');
   const saveBtn = document.getElementById('save-btn');
@@ -83,13 +91,15 @@ async function savePrompt() {
   hasUnsavedChanges = false;
   updateTabTitle();
   
-  // Visual feedback
+  // Visual feedback - restart timeout if already running
   saveBtn.textContent = '✓ Prompt Saved';
   saveBtn.classList.add('saved');
   
-  setTimeout(() => {
+  clearTimeout(savePromptTimeout);
+  savePromptTimeout = setTimeout(() => {
     saveBtn.textContent = 'Save Prompt';
     saveBtn.classList.remove('saved');
+    savePromptTimeout = null;
   }, 2000);
 }
 
