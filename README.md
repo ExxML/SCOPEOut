@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="src/assets/scope_out_icon.png" alt="SCOPEOut Icon" width="144" height="144">
+<img src="src/assets/scope_out_icon_2048.png" alt="SCOPEOut Icon" width="144" height="144">
 
 # SCOPEOut
 
