@@ -4,18 +4,18 @@
   "version": "1.0.0",
   "description": "Custom AI cover letter generator for SCOPE jobs.",
   "icons": {
-    "16": "assets/scope_out_icon.png",
-    "32": "assets/scope_out_icon.png",
-    "48": "assets/scope_out_icon.png",
-    "128": "assets/scope_out_icon.png"
+    "16": "assets/scope_out_icon_128.png",
+    "32": "assets/scope_out_icon_128.png",
+    "48": "assets/scope_out_icon_128.png",
+    "128": "assets/scope_out_icon_128.png"
   },
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "16": "assets/scope_out_icon.png",
-      "32": "assets/scope_out_icon.png",
-      "48": "assets/scope_out_icon.png",
-      "128": "assets/scope_out_icon.png"
+      "16": "assets/scope_out_icon_128.png",
+      "32": "assets/scope_out_icon_128.png",
+      "48": "assets/scope_out_icon_128.png",
+      "128": "assets/scope_out_icon_128.png"
     }
   },
   "permissions": [

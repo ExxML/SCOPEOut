@@ -56,7 +56,8 @@ SCOPEOut/
 ├── src/
 │   ├── manifest.json               # Extension manifest (MV3)
 │   ├── assets/
-│   │   ├── scope_out_icon.png      # Extension icon
+│   │   ├── scope_out_icon_128.png      # 128x128 Extension icon
+│   │   ├── scope_out_icon_2048.png      # Full resolution extension icon
 │   │   └── science_coop_footer.png # Footer image used in the cover letter preview
 │   ├── api/
 │   │   ├── gemini.js               # Gemini API client: builds prompt & calls generateContent
