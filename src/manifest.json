@@ -23,10 +23,6 @@
     "scripting",
     "storage"
   ],
-  "host_permissions": [
-    "https://scope.sciencecoop.ubc.ca/*",
-    "https://generativelanguage.googleapis.com/*"
-  ],
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
