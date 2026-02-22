@@ -109,11 +109,7 @@ We may update this Privacy Policy from time to time. When we do, we will revise 
 
 ## Contact
 
-If you have questions, concerns, or requests regarding this Privacy Policy or SCOPEOut's data practices, please contact:
-
-**Developer:** ExxML
-
-**Project Repository:** https://github.com/ExxML/SCOPEOut
+If you have questions, concerns, or requests regarding this Privacy Policy or SCOPEOut's data practices, please open an issue in the GitHub repository: [https://github.com/ExxML/SCOPEOut](https://github.com/ExxML/SCOPEOut).
 
 ---
 
