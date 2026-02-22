@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" markdown="1">
 
 <img src="src/assets/scope_out_icon_2048.png" alt="SCOPEOut Icon" width="144" height="144">
 
