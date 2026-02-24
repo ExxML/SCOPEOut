@@ -11,6 +11,8 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 [![Gemini API](https://img.shields.io/badge/Gemini_API-2496ED?logo=google&logoColor=white)](https://ai.google.dev/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+### Check it out! [SCOPEOut on Chrome Web Store](https://chromewebstore.google.com/detail/neogidhokkpmbgddpofkfjodfpkidgaf?utm_source=item-share-cb)
+
 </div>
 
 ## 📑 Table of Contents
