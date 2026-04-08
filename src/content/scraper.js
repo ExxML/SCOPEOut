@@ -1,5 +1,5 @@
 /**
- * content/scraper.js — Content script injected into SCOPE job posting pages.
+ * content/scraper.js — Content script injected into UBC Co-op job posting pages.
  *
  * Uses the parseJobDetails() logic from job_details_parser.js to extract
  * company name, job title, and job description from the DOM.
@@ -40,12 +40,13 @@
   }
 
   /**
-   * parseJobDetails — Extracts structured job data from a SCOPE posting page.
+   * parseJobDetails — Extracts structured job data from a UBC Co-op posting page.
    * Mirrors the logic from job_details_parser.js.
    */
   function parseJobDetails() {
     // Company Name
-    const companyName = getValueFromPanel('ORGANIZATION INFORMATION', 'Organization');
+    const companyName = getValueFromPanel('ORGANIZATION INFORMATION', 'Organization') || 
+                                           getValueFromPanel('ORGANIZATION INFORMATION', 'Company');
 
     // Job Title (cleaned: alphabetic words only)
     const rawJobTitle = getValueFromPanel('JOB POSTING INFORMATION', 'Job Title');
@@ -62,7 +63,7 @@
 
     return {
       companyName: companyName || 'Unknown Company',
-      jobTitle: cleanJobTitle || 'Unknown Title',
+      jobTitle: cleanJobTitle || 'Unknown Job Title',
       jobDescription: jobDescription || ''
     };
   }

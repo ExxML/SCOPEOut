@@ -4,7 +4,7 @@
 
 # SCOPEOut
 
-An extension that generates custom cover letters for [SCOPE](https://scope.sciencecoop.ubc.ca) jobs in a single click.
+An extension that generates custom cover letters for UBC Co-op jobs in a single click, including [SCOPE](https://scope.sciencecoop.ubc.ca), [PD Portal](https://pdportal.apsc.ubc.ca/), and more!
 
 [![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-MV3-34A853?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -37,8 +37,8 @@ An extension that generates custom cover letters for [SCOPE](https://scope.scien
 
 ## ✨ Features
 
-- **One-click Generation**: Navigate to any SCOPE job posting and SCOPEOut will scrape the company name, job title, and full job description and feed your customised prompt into Gemini.
-- **Automatic Formatting**: Every generated document will automatically include the company name, date, and job title in the header, and the UBC Science Co-op banner in the footer.
+- **One-click Generation**: Navigate to any UBC Co-op job posting and SCOPEOut will scrape the company name, job title, and full job description and feed your customised prompt into Gemini.
+- **Automatic Formatting**: Every generated document will automatically include the company name, date, and job title in the header, and an optional UBC Science Co-op banner in the footer.
 - **In-browser Editing**: Edit any part of the generated cover letter before saving as a PDF.
 - **Custom Prompts**: Fully adjustable AI prompts with dynamic placeholders for job details such as the company name, job title, and job description.
 - **Multi-Model Support**: Toggle between different Gemini AI models with any API key.
@@ -67,7 +67,7 @@ SCOPEOut/
 │   ├── background/
 │   │   └── service-worker.js       # MV3 service worker: orchestrates scraping, generation & preview
 │   ├── content/
-│   │   └── scraper.js              # Content script injected into SCOPE pages to extract job data
+│   │   └── scraper.js              # Content script injected into job posting pages to extract job data
 │   ├── popup/
 │   │   ├── popup.html              # Extension popup UI
 │   │   ├── popup.css
@@ -80,7 +80,7 @@ SCOPEOut/
 │       ├── prompt-editor.html      # Full-page prompt editor
 │       ├── prompt-editor.css
 │       └── prompt-editor.js        # Prompt editor controller: load, save, restore default
-└── example_job_page.html           # Static replica of a SCOPE posting for local testing
+└── README.md
 ```
 
 ## 🚀 Getting Started
@@ -146,7 +146,7 @@ Based on personal experimentation, these three models work well enough for gener
 User clicks "Generate cover letter"
         │
         ▼
-popup.js validates active tab URL (must be scope.sciencecoop.ubc.ca)
+popup.js validates active tab URL
         │
         ▼
 Sends "startGeneration" message → service-worker.js
