@@ -42,7 +42,7 @@ async function init() {
   // Restore generation state from background and listen for changes
   await restoreGenerationState();
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'session' && changes.generationState) {
+    if (area === 'session' && changes.generationState && 'newValue' in changes.generationState) {
       handleGenerationStateChange(changes.generationState.newValue);
     }
   });
@@ -188,22 +188,26 @@ async function handleGenerationStateChange(state) {
   const btnText = $('btn-text');
 
   if (!state || state.status === 'idle') {
+    isGenerating = false;
     const { apiKeyValid } = await chrome.storage.local.get('apiKeyValid');
     updateGenerateButtonState(apiKeyValid);
     spinner.classList.add('hidden');
     btnText.textContent = 'Generate cover letter';
+    $('status-area').classList.add('hidden');
     return;
   }
 
   if (state.status === 'generating') {
-    btn.disabled = true;
+    isGenerating = true;
+    btn.disabled = false;
     spinner.classList.remove('hidden');
-    btnText.textContent = 'Generating…';
+    btnText.textContent = 'Cancel';
     showStatus(state.message);
     return;
   }
 
   // Complete or error: show message and reset button
+  isGenerating = false;
   if (state.status === 'complete') {
     showStatus(state.message, 'success');
   } else if (state.status === 'error') {
@@ -218,7 +222,15 @@ async function handleGenerationStateChange(state) {
 }
 
 /* ── Cover Letter Generation ───────────────────────── */
+let isGenerating = false;
+
 async function handleGenerate() {
+  // If currently generating, cancel instead
+  if (isGenerating) {
+    chrome.runtime.sendMessage({ action: 'cancelGeneration' });
+    return;
+  }
+
   const btn = $('generate-btn');
   const spinner = $('btn-spinner');
   const btnText = $('btn-text');
@@ -235,10 +247,11 @@ async function handleGenerate() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab) throw new Error('No active tab found.');
 
-    // Disable button, show spinner
-    btn.disabled = true;
+    // Show generating state
+    isGenerating = true;
+    btn.disabled = false;
     spinner.classList.remove('hidden');
-    btnText.textContent = 'Generating…';
+    btnText.textContent = 'Cancel';
     showStatus('Extracting job details…');
 
     // Hand off to background service worker (fire-and-forget)
@@ -251,6 +264,7 @@ async function handleGenerate() {
     });
   } catch (err) {
     showStatus(err.message, 'error');
+    isGenerating = false;
   }
 }
 

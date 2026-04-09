@@ -16,9 +16,10 @@ const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models
  * @param {string} params.apiKey   — Gemini API key.
  * @param {string} params.model    — Model ID (e.g. "gemini-2.5-flash").
  * @param {Object} params.jobData  — { companyName, jobTitle, jobDescription }.
+ * @param {AbortSignal} [params.signal] — Optional signal to abort the request.
  * @returns {Promise<string>}      — The generated cover letter body text.
  */
-export async function generateCoverLetter({ apiKey, model, jobData }) {
+export async function generateCoverLetter({ apiKey, model, jobData, signal }) {
   const { companyName, jobTitle, jobDescription } = jobData;
 
   const prompt = await buildPrompt(companyName, jobTitle, jobDescription);
@@ -40,7 +41,8 @@ export async function generateCoverLetter({ apiKey, model, jobData }) {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    signal
   });
 
   if (!res.ok) {

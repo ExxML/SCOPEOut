@@ -8,10 +8,18 @@
 
 import { generateCoverLetter } from '../api/gemini.js';
 
+let generationAbortController = null;
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === 'startGeneration') {
     handleStartGeneration(message);
     sendResponse({ started: true });
+    return false;
+  }
+
+  if (message.action === 'cancelGeneration') {
+    handleCancelGeneration();
+    sendResponse({ cancelled: true });
     return false;
   }
 
@@ -43,6 +51,13 @@ async function handleGenerate({ apiKey, model, jobData }) {
  * Progress is stored in session storage so the popup can track it.
  */
 async function handleStartGeneration({ tabId, model, apiKey }) {
+  // Abort any existing generation
+  if (generationAbortController) {
+    generationAbortController.abort();
+  }
+  generationAbortController = new AbortController();
+  const { signal } = generationAbortController;
+
   try {
     await chrome.storage.session.set({
       generationState: { status: 'generating', message: 'Extracting job details…' }
@@ -52,6 +67,8 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
       target: { tabId },
       files: ['content/scraper.js']
     });
+
+    if (signal.aborted) return;
 
     const jobData = result.result;
     if (!jobData || !jobData.jobDescription) {
@@ -65,7 +82,7 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
       }
     });
 
-    const coverLetterBody = await generateCoverLetter({ apiKey, model, jobData });
+    const coverLetterBody = await generateCoverLetter({ apiKey, model, jobData, signal });
 
     await chrome.storage.session.set({
       generationState: { status: 'complete', message: 'Cover letter generated successfully.' }
@@ -78,10 +95,28 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
     const previewUrl = chrome.runtime.getURL('preview/preview.html');
     await chrome.tabs.create({ url: previewUrl });
   } catch (err) {
+    if (err.name === 'AbortError' || signal.aborted) return;
     await chrome.storage.session.set({
       generationState: { status: 'error', message: err.message }
     });
+  } finally {
+    if (generationAbortController?.signal === signal) {
+      generationAbortController = null;
+    }
   }
+}
+
+/**
+ * Cancels any in-progress generation.
+ */
+async function handleCancelGeneration() {
+  if (generationAbortController) {
+    generationAbortController.abort();
+    generationAbortController = null;
+  }
+  await chrome.storage.session.set({
+    generationState: { status: 'idle' }
+  });
 }
 
 /**
