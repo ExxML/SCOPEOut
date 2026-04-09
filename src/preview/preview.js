@@ -27,7 +27,10 @@ function loadCoverLetter() {
 
     const { coverLetterBody, companyName, jobTitle } = data;
     document.title = `${companyName} Cover Letter`;
-    renderMultiPageLetter(companyName, jobTitle, coverLetterBody);
+    chrome.storage.local.get(['includeCoopFooter'], (localResult) => {
+      const includeFooter = localResult.includeCoopFooter !== false;
+      renderMultiPageLetter(companyName, jobTitle, coverLetterBody, includeFooter);
+    });
   });
 }
 
@@ -50,7 +53,7 @@ function createSinglePage(message) {
 /**
  * Renders the complete letter with automatic pagination.
  */
-function renderMultiPageLetter(companyName, jobTitle, bodyText) {
+function renderMultiPageLetter(companyName, jobTitle, bodyText, includeFooter) {
   const container = document.getElementById('pages-container');
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', {
@@ -84,10 +87,11 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText) {
   header.innerHTML = headerHTML;
   currentPage.appendChild(header);
 
-  const body = document.createElement('section');
+  let body = document.createElement('section');
   body.className = 'cl-body';
   body.contentEditable = 'true';
   currentPage.appendChild(body);
+  if (includeFooter) addFooter(currentPage);
 
   container.appendChild(currentPage);
 
@@ -98,20 +102,18 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText) {
     const para = tempP.firstChild;
     body.appendChild(para);
 
-    // Check if content overflows current page
+    // Check if content overflows current page (footer already in DOM, so its height is accounted for)
     if (currentPage.scrollHeight > currentPage.clientHeight) {
       // Remove the paragraph that caused overflow
       body.removeChild(para);
 
-      // Add footer to current page
-      addFooter(currentPage);
-
-      // Create new page
+      // Create new page with footer pre-added
       currentPage = createPage();
       const newBody = document.createElement('section');
       newBody.className = 'cl-body';
       newBody.contentEditable = 'true';
       currentPage.appendChild(newBody);
+      if (includeFooter) addFooter(currentPage);
       container.appendChild(currentPage);
 
       // Add the paragraph to new page
@@ -119,9 +121,6 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText) {
       body = newBody;
     }
   }
-
-  // Add footer to last page
-  addFooter(currentPage);
 }
 
 /**
