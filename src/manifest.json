@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SCOPEOut",
   "version": "1.1.0",
-  "description": "Custom AI cover letter generator for SCOPE jobs.",
+  "description": "Custom AI cover letter generator for UBC Co-op jobs.",
   "icons": {
     "16": "assets/scope_out_icon_128.png",
     "32": "assets/scope_out_icon_128.png",
