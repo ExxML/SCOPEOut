@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SCOPEOut",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Custom AI cover letter generator for SCOPE jobs.",
   "icons": {
     "16": "assets/scope_out_icon_128.png",
