@@ -13,14 +13,21 @@ const $ = (id) => document.getElementById(id);
 /* ── Initialisation ──────────────────────────────── */
 async function init() {
   // Restore persisted state
-  const stored = await chrome.storage.local.get(['geminiApiKey', 'geminiModel', 'apiKeyValid', 'includeCoopFooter']);
+  const stored = await chrome.storage.local.get(['geminiApiKey', 'geminiModel', 'apiKeyValid', 'coopFooterType', 'includeCoopFooter']);
   if (stored.geminiApiKey) {
     $('api-key-input').value = stored.geminiApiKey;
   }
   if (stored.geminiModel) {
     $('model-select').value = stored.geminiModel;
   }
-  $('coop-footer-toggle').checked = stored.includeCoopFooter !== false;
+  // Migrate legacy includeCoopFooter boolean to coopFooterType string
+  if (stored.coopFooterType) {
+    $('coop-footer-select').value = stored.coopFooterType;
+  } else if (stored.includeCoopFooter === false) {
+    $('coop-footer-select').value = 'none';
+  } else {
+    $('coop-footer-select').value = 'science';
+  }
 
   // Update generate button state based on API key validity
   updateGenerateButtonState(stored.apiKeyValid);
@@ -31,8 +38,8 @@ async function init() {
   $('save-api-key').addEventListener('click', saveApiKey);
   $('edit-prompt-btn').addEventListener('click', openPromptEditor);
   $('model-select').addEventListener('change', saveModel);
-  $('coop-footer-toggle').addEventListener('change', () => {
-    chrome.storage.local.set({ includeCoopFooter: $('coop-footer-toggle').checked });
+  $('coop-footer-select').addEventListener('change', () => {
+    chrome.storage.local.set({ coopFooterType: $('coop-footer-select').value });
   });
   $('generate-btn').addEventListener('click', handleGenerate);
   $('api-info-btn').addEventListener('click', () => {

@@ -27,9 +27,11 @@ function loadCoverLetter() {
 
     const { coverLetterBody, companyName, jobTitle } = data;
     document.title = `${companyName} Cover Letter`;
-    chrome.storage.local.get(['includeCoopFooter'], (localResult) => {
-      const includeFooter = localResult.includeCoopFooter !== false;
-      renderMultiPageLetter(companyName, jobTitle, coverLetterBody, includeFooter);
+    chrome.storage.local.get(['coopFooterType', 'includeCoopFooter'], (localResult) => {
+      // Migrate legacy includeCoopFooter boolean to coopFooterType string
+      const footerType = localResult.coopFooterType
+        ?? (localResult.includeCoopFooter === false ? 'none' : 'science');
+      renderMultiPageLetter(companyName, jobTitle, coverLetterBody, footerType);
     });
   });
 }
@@ -53,7 +55,7 @@ function createSinglePage(message) {
 /**
  * Renders the complete letter with automatic pagination.
  */
-function renderMultiPageLetter(companyName, jobTitle, bodyText, includeFooter) {
+function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
   const container = document.getElementById('pages-container');
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', {
@@ -91,7 +93,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText, includeFooter) {
   body.className = 'cl-body';
   body.contentEditable = 'true';
   currentPage.appendChild(body);
-  if (includeFooter) addFooter(currentPage);
+  if (footerType !== 'none') addFooter(currentPage, footerType);
 
   container.appendChild(currentPage);
 
@@ -113,7 +115,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText, includeFooter) {
       newBody.className = 'cl-body';
       newBody.contentEditable = 'true';
       currentPage.appendChild(newBody);
-      if (includeFooter) addFooter(currentPage);
+      if (footerType !== 'none') addFooter(currentPage, footerType);
       container.appendChild(currentPage);
 
       // Add the paragraph to new page
@@ -135,12 +137,17 @@ function createPage() {
 /**
  * Adds footer with logo to a page.
  */
-function addFooter(page) {
+function addFooter(page, footerType) {
   const footer = document.createElement('footer');
   footer.className = 'cl-footer';
   const logo = document.createElement('img');
-  logo.src = chrome.runtime.getURL('assets/science_coop_footer.png');
-  logo.alt = 'UBC Science Co-op';
+  if (footerType === 'eng') {
+    logo.src = chrome.runtime.getURL('assets/eng_coop_footer.png');
+    logo.alt = 'UBC Engineering Co-op';
+  } else {
+    logo.src = chrome.runtime.getURL('assets/science_coop_footer.png');
+    logo.alt = 'UBC Science Co-op';
+  }
   footer.appendChild(logo);
   page.appendChild(footer);
 }

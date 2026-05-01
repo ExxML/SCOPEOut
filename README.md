@@ -38,7 +38,7 @@ An extension that generates custom cover letters for UBC Co-op jobs in a single 
 ## ✨ Features
 
 - **One-click Generation**: Navigate to any UBC Co-op job posting and SCOPEOut will scrape the company name, job title, and full job description and feed your customised prompt into Gemini.
-- **Automatic Formatting**: Every generated document will automatically include the company name, date, and job title in the header, and an optional UBC Science Co-op banner in the footer.
+- **Automatic Formatting**: Every generated document will automatically include the company name, date, and job title in the header, and an optional UBC Science Co-op or Engineering Co-op banner in the footer.
 - **In-browser Editing**: Edit any part of the generated cover letter before saving as a PDF.
 - **Custom Prompts**: Fully adjustable AI prompts with dynamic placeholders for job details such as the company name, job title, and job description.
 - **Multi-Model Support**: Toggle between different Gemini AI models with any API key.
@@ -56,30 +56,31 @@ An extension that generates custom cover letters for UBC Co-op jobs in a single 
 ```
 SCOPEOut/
 ├── src/
-│   ├── manifest.json               # Extension manifest (MV3)
+│   ├── manifest.json                # Extension manifest (MV3)
 │   ├── assets/
-│   │   ├── scope_out_icon_128.png      # 128x128 Extension icon
-│   │   ├── scope_out_icon_2048.png      # Full resolution extension icon
-│   │   └── science_coop_footer.png # Footer image used in the cover letter preview
+│   │   ├── scope_out_icon_128.png   # 128x128 Extension icon
+│   │   ├── scope_out_icon_2048.png  # Full resolution extension icon
+│   │   ├── eng_coop_footer.png      # Engineering Co-op footer image for cover letter
+│   │   └── science_coop_footer.png  # Science Co-op footer image for cover letter
 │   ├── api/
-│   │   ├── gemini.js               # Gemini API client: builds prompt & calls generateContent
-│   │   └── default-prompt.js       # Default cover letter prompt template with placeholders
+│   │   ├── gemini.js                # Gemini API client: builds prompt & calls generateContent
+│   │   └── default-prompt.js        # Default cover letter prompt template with placeholders
 │   ├── background/
-│   │   └── service-worker.js       # MV3 service worker: orchestrates scraping, generation & preview
+│   │   └── service-worker.js        # MV3 service worker: orchestrates scraping, generation & preview
 │   ├── content/
-│   │   └── scraper.js              # Content script injected into job posting pages to extract job data
+│   │   └── scraper.js               # Content script injected into job posting pages to extract job data
 │   ├── popup/
-│   │   ├── popup.html              # Extension popup UI
+│   │   ├── popup.html               # Extension popup UI
 │   │   ├── popup.css
-│   │   └── popup.js                # Popup controller: settings, model picker, generation trigger
+│   │   └── popup.js                 # Popup controller: settings, model picker, generation trigger
 │   ├── preview/
-│   │   ├── preview.html            # Cover letter preview page
+│   │   ├── preview.html             # Cover letter preview page
 │   │   ├── preview.css
-│   │   └── preview.js              # Renders paginated, editable letter; handles PDF download
+│   │   └── preview.js               # Renders paginated, editable letter; handles PDF download
 │   └── prompt-editor/
-│       ├── prompt-editor.html      # Full-page prompt editor
+│       ├── prompt-editor.html       # Full-page prompt editor
 │       ├── prompt-editor.css
-│       └── prompt-editor.js        # Prompt editor controller: load, save, restore default
+│       └── prompt-editor.js         # Prompt editor controller: load, save, restore default
 └── README.md
 ```
 
