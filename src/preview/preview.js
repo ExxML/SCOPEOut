@@ -55,7 +55,7 @@ function createSinglePage(message) {
 /**
  * Renders the complete letter with automatic pagination.
  */
-function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
+async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
   const container = document.getElementById('pages-container');
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', {
@@ -93,7 +93,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
   body.className = 'cl-body';
   body.contentEditable = 'true';
   currentPage.appendChild(body);
-  if (footerType !== 'none') addFooter(currentPage, footerType);
+  if (footerType !== 'none') await addFooter(currentPage, footerType);
 
   container.appendChild(currentPage);
 
@@ -104,7 +104,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
     const para = tempP.firstChild;
     body.appendChild(para);
 
-    // Check if content overflows current page (footer already in DOM, so its height is accounted for)
+    // Check if content overflows current page (body padding reserves footer space)
     if (currentPage.scrollHeight > currentPage.clientHeight) {
       // Remove the paragraph that caused overflow
       body.removeChild(para);
@@ -115,7 +115,7 @@ function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
       newBody.className = 'cl-body';
       newBody.contentEditable = 'true';
       currentPage.appendChild(newBody);
-      if (footerType !== 'none') addFooter(currentPage, footerType);
+      if (footerType !== 'none') await addFooter(currentPage, footerType);
       container.appendChild(currentPage);
 
       // Add the paragraph to new page
@@ -136,10 +136,12 @@ function createPage() {
 
 /**
  * Adds footer with logo to a page.
+ * Returns a Promise that resolves once the footer image has loaded and
+ * body padding has been applied to prevent text from running into the footer.
  */
 function addFooter(page, footerType) {
   const footer = document.createElement('footer');
-  footer.className = 'cl-footer';
+  footer.className = footerType === 'eng' ? 'cl-footer--eng' : 'cl-footer--science';
   const logo = document.createElement('img');
   if (footerType === 'eng') {
     logo.src = chrome.runtime.getURL('assets/eng_coop_footer.png');
@@ -150,6 +152,20 @@ function addFooter(page, footerType) {
   }
   footer.appendChild(logo);
   page.appendChild(footer);
+
+  return new Promise((resolve) => {
+    const applyPadding = () => {
+      const body = page.querySelector('.cl-body');
+      if (body) body.style.paddingBottom = footer.offsetHeight + 'px';
+      resolve();
+    };
+    if (logo.complete && logo.naturalHeight > 0) {
+      applyPadding();
+    } else {
+      logo.addEventListener('load', applyPadding, { once: true });
+      logo.addEventListener('error', applyPadding, { once: true });
+    }
+  });
 }
 
 /**

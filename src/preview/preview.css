@@ -96,16 +96,33 @@ html, body {
 }
 
 /* ── Footer ──────────────────────────────────────── */
-.cl-footer {
+.cl-footer--science {
   margin-top: auto;
   text-align: center;
   padding-top: 24pt;
 }
 
-.cl-footer img {
+.cl-footer--science img {
   max-width: 100%;
   height: auto;
   max-height: 80px;
+}
+
+.cl-footer--eng {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.cl-footer--eng img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  display: block;
 }
 
 /* ── Editable Hover Hint ─────────────────────────── */
@@ -142,8 +159,22 @@ html, body {
     flex: 1;
   }
 
-  .cl-footer {
+  .cl-footer--science {
     margin-top: auto;
+  }
+
+  .cl-footer--eng {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+  }
+
+  .cl-footer--eng img {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
   }
 
   .cl-header:focus,
