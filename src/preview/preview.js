@@ -7,6 +7,8 @@
 
 document.addEventListener('DOMContentLoaded', init);
 
+let currentFooterType = 'none';
+
 function init() {
   loadCoverLetter();
   document.getElementById('download-btn').addEventListener('click', downloadPDF);
@@ -31,6 +33,7 @@ function loadCoverLetter() {
       // Migrate legacy includeCoopFooter boolean to coopFooterType string
       const footerType = localResult.coopFooterType
         ?? (localResult.includeCoopFooter === false ? 'none' : 'science');
+      currentFooterType = footerType;
       renderMultiPageLetter(companyName, jobTitle, coverLetterBody, footerType);
     });
   });
@@ -41,15 +44,15 @@ function loadCoverLetter() {
  */
 function createSinglePage(message) {
   const container = document.getElementById('pages-container');
-  const page = document.createElement('div');
-  page.className = 'page';
-  
+  const { wrapper, page } = createPage();
+
   const body = document.createElement('section');
   body.className = 'cl-body';
   body.textContent = message;
-  
+
   page.appendChild(body);
-  container.appendChild(page);
+  container.appendChild(wrapper);
+  updatePageControls(container);
 }
 
 /**
@@ -82,7 +85,7 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
     });
 
   // Create first page with header
-  let currentPage = createPage();
+  let { wrapper: currentWrapper, page: currentPage } = createPage();
   const header = document.createElement('header');
   header.className = 'cl-header';
   header.contentEditable = 'true';
@@ -95,7 +98,7 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
   currentPage.appendChild(body);
   if (footerType !== 'none') await addFooter(currentPage, footerType);
 
-  container.appendChild(currentPage);
+  container.appendChild(currentWrapper);
 
   // Add paragraphs, creating new pages as needed
   for (const paraHTML of paragraphs) {
@@ -110,28 +113,124 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
       body.removeChild(para);
 
       // Create new page with footer pre-added
-      currentPage = createPage();
+      const next = createPage();
+      currentWrapper = next.wrapper;
+      currentPage = next.page;
       const newBody = document.createElement('section');
       newBody.className = 'cl-body';
       newBody.contentEditable = 'true';
       currentPage.appendChild(newBody);
       if (footerType !== 'none') await addFooter(currentPage, footerType);
-      container.appendChild(currentPage);
+      container.appendChild(currentWrapper);
 
       // Add the paragraph to new page
       newBody.appendChild(para);
       body = newBody;
     }
   }
+
+  updatePageControls(container);
 }
 
 /**
- * Creates a new page element.
+ * Creates a new page element wrapped in a page-wrapper div.
+ * Returns { wrapper, page }.
  */
 function createPage() {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'page-wrapper';
+
   const page = document.createElement('div');
   page.className = 'page';
-  return page;
+  wrapper.appendChild(page);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-page-btn';
+  removeBtn.title = 'Remove this page';
+  removeBtn.textContent = '✕';
+  wrapper.appendChild(removeBtn);
+
+  removeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const existing = wrapper.querySelector('.remove-confirm');
+    if (existing) { existing.remove(); return; }
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'remove-confirm';
+    tooltip.innerHTML = `
+      <span class="remove-confirm-text">Remove this page?</span>
+      <button class="remove-confirm-yes">Confirm</button>
+      <button class="remove-confirm-no">Cancel</button>
+    `;
+    wrapper.appendChild(tooltip);
+
+    tooltip.querySelector('.remove-confirm-yes').addEventListener('click', () => {
+      const container = document.getElementById('pages-container');
+      wrapper.remove();
+      updatePageControls(container);
+    });
+    tooltip.querySelector('.remove-confirm-no').addEventListener('click', () => tooltip.remove());
+
+    // Click outside to dismiss
+    const dismiss = (ev) => {
+      if (!tooltip.contains(ev.target) && ev.target !== removeBtn) {
+        tooltip.remove();
+        document.removeEventListener('click', dismiss, true);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', dismiss, true), 0);
+  });
+
+  return { wrapper, page };
+}
+
+/**
+ * Refreshes remove-button visibility (hidden when only 1 page) and
+ * ensures exactly one add-page strip exists at the bottom.
+ */
+function updatePageControls(container) {
+  const wrappers = container.querySelectorAll('.page-wrapper');
+
+  // Show/hide remove buttons based on page count
+  wrappers.forEach((w) => {
+    const btn = w.querySelector('.remove-page-btn');
+    if (btn) btn.style.display = wrappers.length === 1 ? 'none' : '';
+  });
+
+  // Remove existing strip, re-add after last wrapper
+  const existingStrip = container.querySelector('.add-page-strip');
+  if (existingStrip) existingStrip.remove();
+  container.appendChild(buildAddPageStrip());
+}
+
+/**
+ * Builds the "+ Add Page" strip element.
+ */
+function buildAddPageStrip() {
+  const strip = document.createElement('div');
+  strip.className = 'add-page-strip';
+
+  const label = document.createElement('span');
+  label.className = 'add-page-label';
+  label.innerHTML = '+ Add Page';
+  strip.appendChild(label);
+
+  strip.addEventListener('click', async () => {
+    const container = document.getElementById('pages-container');
+    const { wrapper, page } = createPage();
+    const body = document.createElement('section');
+    body.className = 'cl-body';
+    body.contentEditable = 'true';
+    page.appendChild(body);
+    if (currentFooterType !== 'none') await addFooter(page, currentFooterType);
+
+    // Insert wrapper before the strip
+    const strip = container.querySelector('.add-page-strip');
+    container.insertBefore(wrapper, strip);
+    updatePageControls(container);
+  });
+
+  return strip;
 }
 
 /**
