@@ -154,16 +154,11 @@ function addFooter(page, footerType) {
   page.appendChild(footer);
 
   return new Promise((resolve) => {
-    const applyPadding = () => {
-      const body = page.querySelector('.cl-body');
-      if (body) body.style.paddingBottom = footer.offsetHeight + 'px';
-      resolve();
-    };
     if (logo.complete && logo.naturalHeight > 0) {
-      applyPadding();
+      resolve();
     } else {
-      logo.addEventListener('load', applyPadding, { once: true });
-      logo.addEventListener('error', applyPadding, { once: true });
+      logo.addEventListener('load', resolve, { once: true });
+      logo.addEventListener('error', resolve, { once: true });
     }
   });
 }

@@ -97,15 +97,20 @@ html, body {
 
 /* ── Footer ──────────────────────────────────────── */
 .cl-footer--science {
-  margin-top: auto;
+  position: absolute;
+  bottom: 0.3in;
+  left: 0;
+  right: 0;
   text-align: center;
-  padding-top: 24pt;
+  line-height: 0;
 }
 
 .cl-footer--science img {
   max-width: 100%;
   height: auto;
-  max-height: 80px;
+  max-height: none;
+  display: block;
+  margin: 0 auto;
 }
 
 .cl-footer--eng {
@@ -160,7 +165,10 @@ html, body {
   }
 
   .cl-footer--science {
-    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 
   .cl-footer--eng {
