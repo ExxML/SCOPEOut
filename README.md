@@ -135,10 +135,10 @@ Based on personal experimentation, these three models work well enough for gener
     - `{jobTitle}` : the cleaned job title scraped from the posting
     - `{jobDescription}` : the full job description scraped from the posting
 4. Click **Save Prompt**. The tab title shows `(*)` while there are unsaved changes.
-5. Click **Restore Default Prompt** to revert to the built-in template at any time.
+5. Click **Restore Default** to revert to the built-in template at any time.
 
 > [!NOTE]
-> This prompt is saved in your browser's local storage. However, clearing your browser data or uninstalling SCOPEOut will delete your prompt, so we recommend keeping a backup in a separate document.
+> This prompt is saved in your browser's local storage. Therefore, clearing your browser data or uninstalling SCOPEOut will delete your prompt, so we recommend keeping a backup in a separate document.
 
 
 ## 🤖 How It Works

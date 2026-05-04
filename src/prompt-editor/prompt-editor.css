@@ -22,12 +22,20 @@ html, body {
   justify-content: center;
 }
 
-/* ── Save Button ─────────────────────────────────── */
-.save-btn {
+/* ── Button Group ────────────────────────────────── */
+.btn-group {
   position: fixed;
   top: 16px;
   right: 16px;
   z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
+/* ── Save Button ─────────────────────────────────── */
+.save-btn {
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
@@ -55,10 +63,6 @@ html, body {
 
 /* ── Restore Button ──────────────────────────────── */
 .restore-btn {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
