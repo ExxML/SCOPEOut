@@ -281,6 +281,97 @@ html, body {
   background: #f3f4f6;
 }
 
+/* ── Job Info Panel ──────────────────────────────── */
+.job-info-panel {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.job-info-toggle {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+  color: #002145;
+  border: 1.5px solid #002145;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.job-info-toggle:hover {
+  background: #002145;
+  color: #fff;
+}
+
+.job-info-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 340px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  padding: 16px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.job-info-content::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.job-info-panel:hover .job-info-content {
+  display: flex;
+}
+
+.job-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.job-info-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.job-info-value {
+  font-size: 13px;
+  color: #111827;
+}
+
+.job-info-desc-row {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 10px;
+}
+
+.job-info-desc {
+  font-size: 12px;
+  color: #374151;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
 /* ── Print / PDF Styles ──────────────────────────── */
 @media print {
   html, body {
@@ -342,7 +433,8 @@ html, body {
 
   .remove-page-btn,
   .remove-confirm,
-  .add-page-strip {
+  .add-page-strip,
+  .job-info-panel {
     display: none !important;
   }
 

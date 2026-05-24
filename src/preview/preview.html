@@ -12,6 +12,16 @@
     Download PDF
   </button>
 
+  <!-- Job info panel (hidden during print) -->
+  <div id="job-info-panel" class="job-info-panel">
+    <button id="job-info-toggle" class="job-info-toggle" title="View job details">Job Info</button>
+    <div id="job-info-content" class="job-info-content">
+      <div class="job-info-row"><span class="job-info-label">Company</span><span id="ji-company" class="job-info-value"></span></div>
+      <div class="job-info-row"><span class="job-info-label">Title</span><span id="ji-title" class="job-info-value"></span></div>
+      <div class="job-info-row job-info-desc-row"><span class="job-info-label">Description</span><pre id="ji-desc" class="job-info-desc"></pre></div>
+    </div>
+  </div>
+
   <!-- Cover letter pages container -->
   <div id="pages-container" class="pages-container">
     <!-- Pages will be dynamically created here -->

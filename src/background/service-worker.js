@@ -90,7 +90,7 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
 
     // Store data and open the preview page
     await chrome.storage.session.set({
-      coverLetterData: { coverLetterBody, companyName: jobData.companyName, jobTitle: jobData.jobTitle }
+      coverLetterData: { coverLetterBody, companyName: jobData.companyName, jobTitle: jobData.jobTitle, jobDescription: jobData.jobDescription }
     });
     const previewUrl = chrome.runtime.getURL('preview/preview.html');
     await chrome.tabs.create({ url: previewUrl });

@@ -27,8 +27,11 @@ function loadCoverLetter() {
       return;
     }
 
-    const { coverLetterBody, companyName, jobTitle } = data;
+    const { coverLetterBody, companyName, jobTitle, jobDescription } = data;
     document.title = `${companyName} Cover Letter`;
+    document.getElementById('ji-company').textContent = companyName || '—';
+    document.getElementById('ji-title').textContent = jobTitle || '—';
+    document.getElementById('ji-desc').textContent = jobDescription || '—';
     chrome.storage.local.get(['coopFooterType', 'includeCoopFooter'], (localResult) => {
       // Migrate legacy includeCoopFooter boolean to coopFooterType string
       const footerType = localResult.coopFooterType
