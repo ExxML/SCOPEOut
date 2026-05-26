@@ -15,12 +15,56 @@ html, body {
 
 .pages-container {
   padding: 32px 0;
+  margin-top: var(--banner-height, 0px);
+}
+
+/* ── Default Prompt Warning Banner ──────────────── */
+.default-prompt-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: #fff3cd;
+  border-bottom: 1px solid #e6c200;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+  color: #664d00;
+}
+
+.default-prompt-banner a {
+  color: #002145;
+  font-weight: 600;
+}
+
+.dismiss-banner-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #664d00;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.dismiss-banner-btn:hover {
+  color: #000;
+}
+
+@media print {
+  .default-prompt-banner { display: none !important; }
 }
 
 /* ── Download Button ─────────────────────────────── */
 .download-btn {
   position: fixed;
-  top: 16px;
+  top: calc(16px + var(--banner-height, 0px));
   right: 16px;
   z-index: 1000;
   padding: 10px 20px;
@@ -284,7 +328,7 @@ html, body {
 /* ── Job Info Panel ──────────────────────────────── */
 .job-info-panel {
   position: fixed;
-  top: 16px;
+  top: calc(16px + var(--banner-height, 0px));
   left: 16px;
   z-index: 1000;
   font-family: 'Segoe UI', system-ui, sans-serif;

@@ -12,6 +12,28 @@ let currentFooterType = 'none';
 function init() {
   loadCoverLetter();
   document.getElementById('download-btn').addEventListener('click', downloadPDF);
+  initDefaultPromptBanner();
+}
+
+function initDefaultPromptBanner() {
+  const banner = document.getElementById('default-prompt-banner');
+
+  chrome.storage.local.get(['promptCustomized'], (result) => {
+    if (!result.promptCustomized) {
+      banner.style.display = 'flex';
+      document.documentElement.style.setProperty('--banner-height', `${banner.offsetHeight}px`);
+    }
+  });
+
+  document.getElementById('dismiss-banner').addEventListener('click', () => {
+    banner.style.display = 'none';
+    document.documentElement.style.setProperty('--banner-height', '0px');
+  });
+
+  document.getElementById('open-prompt-editor').addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: chrome.runtime.getURL('prompt-editor/prompt-editor.html') });
+  });
 }
 
 /**

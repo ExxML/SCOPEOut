@@ -119,8 +119,11 @@ async function savePrompt() {
     return;
   }
   
-  await chrome.storage.local.set({ prompt: promptText });
-  
+  await chrome.storage.local.set({
+    prompt: promptText,
+    promptCustomized: promptText !== DEFAULT_PROMPT
+  });
+
   // Update saved content and reset unsaved changes flag
   savedPromptContent = promptText;
   hasUnsavedChanges = false;
