@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="prompt-editor.css">
 </head>
 <body>
+  <div id="placeholder-warning" class="placeholder-warning" hidden>
+    ⚠ Unused Placeholders:<br><span id="unused-placeholders"></span>
+  </div>
+
   <div class="btn-group">
     <button id="restore-btn" class="restore-btn" title="Restore Default">Restore Default</button>
     <button id="save-btn" class="save-btn" title="Save Prompt">Save Prompt</button>
@@ -28,7 +32,10 @@
       </header>
       
       <section class="prompt-body">
-        <textarea id="prompt-textarea" placeholder="Enter your prompt here..."></textarea>
+        <div class="textarea-wrapper">
+          <div id="prompt-highlight" class="prompt-highlight" aria-hidden="true"></div>
+          <textarea id="prompt-textarea" placeholder="Enter your prompt here..." spellcheck="false"></textarea>
+        </div>
       </section>
     </div>
   </div>

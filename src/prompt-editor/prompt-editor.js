@@ -17,7 +17,11 @@ function init() {
   loadPrompt();
   document.getElementById('save-btn').addEventListener('click', savePrompt);
   document.getElementById('restore-btn').addEventListener('click', restoreDefaultPrompt);
-  document.getElementById('prompt-textarea').addEventListener('input', handlePromptChange);
+  const textarea = document.getElementById('prompt-textarea');
+  textarea.addEventListener('input', handlePromptChange);
+  textarea.addEventListener('scroll', () => {
+    document.getElementById('prompt-highlight').scrollTop = textarea.scrollTop;
+  });
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 's') {
       e.preventDefault();
@@ -26,15 +30,45 @@ function init() {
   });
 }
 
+const KNOWN_PLACEHOLDERS = new Set(['companyName', 'jobTitle', 'jobDescription']);
+
+function updateWarning(text) {
+  const unusedPlaceholders = [...KNOWN_PLACEHOLDERS].filter(p => !text.includes(`{${p}}`));
+  const warning = document.getElementById('placeholder-warning');
+  const span = document.getElementById('unused-placeholders');
+  if (unusedPlaceholders.length) {
+    span.innerHTML = unusedPlaceholders.map(p => `- {${p}}`).join('<br>');
+    warning.hidden = false;
+  } else {
+    warning.hidden = true;
+  }
+}
+
+function updateHighlight() {
+  const textarea = document.getElementById('prompt-textarea');
+  const highlight = document.getElementById('prompt-highlight');
+  const escaped = textarea.value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  const html = escaped.replace(/\{(\w+)\}/g, (match, name) =>
+    KNOWN_PLACEHOLDERS.has(name) ? `<mark>${match}</mark>` : match
+  );
+  highlight.innerHTML = html + '\n';
+  highlight.scrollTop = textarea.scrollTop;
+  updateWarning(textarea.value);
+}
+
 /**
  * Handles changes to the prompt textarea.
  */
 function handlePromptChange() {
   const textarea = document.getElementById('prompt-textarea');
   const currentContent = textarea.value;
-  
+
   hasUnsavedChanges = currentContent !== savedPromptContent;
   updateTabTitle();
+  updateHighlight();
 }
 
 /**
@@ -67,6 +101,7 @@ async function loadPrompt() {
   
   hasUnsavedChanges = false;
   updateTabTitle();
+  updateHighlight();
 }
 
 /**
