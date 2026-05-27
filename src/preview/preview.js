@@ -84,6 +84,8 @@ function createSinglePage(message) {
  * Renders the complete letter with automatic pagination.
  */
 async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType) {
+  await document.fonts.ready;
+
   const container = document.getElementById('pages-container');
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', {
