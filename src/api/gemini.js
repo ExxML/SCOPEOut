@@ -54,9 +54,14 @@ export async function generateCoverLetter({ apiKey, model, jobData, signal }) {
 
   const data = await res.json();
 
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const candidate = data?.candidates?.[0];
+  const text = candidate?.content?.parts?.[0]?.text;
   if (!text) {
     throw new Error('Gemini returned an empty response.');
+  }
+
+  if (candidate?.finishReason === 'MAX_TOKENS') {
+    throw new Error('Cover letter generation was cut off because the response was too long. Try simplifying your prompt.');
   }
 
   return text;
