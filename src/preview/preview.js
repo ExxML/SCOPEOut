@@ -134,7 +134,8 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
     const para = tempP.firstChild;
     body.appendChild(para);
 
-    // Check if content overflows current page (body padding reserves footer space)
+    // Force reflow before measuring — scrollHeight is stale without it
+    void currentPage.offsetHeight;
     if (currentPage.scrollHeight > currentPage.clientHeight) {
       // Remove the paragraph that caused overflow
       body.removeChild(para);
