@@ -41,30 +41,36 @@
 
   /**
    * parseJobDetails — Extracts structured job data from a UBC Co-op posting page.
-   * Mirrors the logic from job_details_parser.js.
    */
   function parseJobDetails() {
     // Company Name
-    const companyName = getValueFromPanel('ORGANIZATION INFORMATION', 'Organization') || 
-                                           getValueFromPanel('ORGANIZATION INFORMATION', 'Company');
+    const rawCompanyName =
+      getValueFromPanel('ORGANIZATION INFORMATION', 'Organization') ||
+      getValueFromPanel('ORGANIZATION INFORMATION', 'Company');
+    // Remove parenthetical content and dash-separated suffixes
+    const cleanCompanyName = rawCompanyName
+      ? rawCompanyName.replace(/\s*\([^)]*\)/g, '').replace(/\s+-\s.*$/, '').trim()
+      : null;
 
-    // Job Title (cleaned: alphabetic words only)
+    // Job Title
     const rawJobTitle = getValueFromPanel('JOB POSTING INFORMATION', 'Job Title');
-    let cleanJobTitle = '';
-    if (rawJobTitle) {
-      cleanJobTitle = rawJobTitle
-        .split(/\s+/)
-        .filter((word) => /^[a-zA-Z]+$/.test(word))
-        .join(' ');
-    }
+    // Remove parenthetical content and words containing numbers
+    const cleanJobTitle = rawJobTitle
+      ? rawJobTitle
+          .replace(/\s*\([^)]*\)/g, '')
+          .split(' ')
+          .filter(w => !/\d/.test(w))
+          .join(' ')
+          .trim()
+      : null;
 
     // Job Description
     const jobDescription = getValueFromPanel('JOB POSTING INFORMATION', 'Job Description');
 
     return {
-      companyName: companyName || 'Unknown Company',
+      companyName: cleanCompanyName || 'Unknown Company',
       jobTitle: cleanJobTitle || 'Unknown Job Title',
-      jobDescription: jobDescription || ''
+      jobDescription: jobDescription || 'Unknown Job Description'
     };
   }
 
