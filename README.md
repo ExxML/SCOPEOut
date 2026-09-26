@@ -63,7 +63,7 @@ SCOPEOut/
 │   │   ├── eng_coop_footer.png      # Engineering Co-op footer image for cover letter
 │   │   └── science_coop_footer.png  # Science Co-op footer image for cover letter
 │   ├── api/
-│   │   ├── gemini.js                # Gemini API client: builds prompt & calls generateContent
+│   │   ├── gemini.js                # Gemini API client: lists models, builds prompt & calls generateContent
 │   │   └── default-prompt.js        # Default cover letter prompt template with placeholders
 │   ├── background/
 │   │   └── service-worker.js        # MV3 service worker: orchestrates scraping, generation & preview
@@ -109,22 +109,16 @@ SCOPEOut/
 1. Click the SCOPEOut icon to open the popup.
 2. Click **Settings** to expand the settings panel.
 3. Paste your Gemini API key into the field.
-4. Click **Save** (the extension will validate the key against all supported models).
+4. Click **Save** (the extension will validate the key and fetch its available models).
 5. Once the key is confirmed valid, the **Generate cover letter** button will become available.
 
 ## ⚙️ Configuration
 
 ### Selecting a Model
 
-Use the **Model** dropdown under **Settings** in the popup to choose a Gemini model. Each option shows the rate limits for the free tier:
+Use the **Model** dropdown in the popup to choose a Gemini model. The list is fetched from the Gemini API each time the popup opens, so new models appear automatically and deprecated ones are removed. Only general-purpose text-in, text-out models (including previews and `-latest` aliases) are shown, sorted newest first.
 
-| Model | Requests / min | Requests / day |
-|---|---|---|
-| Gemini 2.5 Flash Lite | 10 | 20 |
-| Gemini 2.5 Flash (default) | 5 | 20 |
-| Gemini 3 Flash Preview | 5 | 20 |
-
-Based on personal experimentation, these three models work well enough for generating cover letters, but you can clone this project and experiment with different models yourself (edit only `model-select` in `popup.html`).
+Free tier rate limits vary by model; see [Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) for current values.
 
 ### Customising the Prompt
 

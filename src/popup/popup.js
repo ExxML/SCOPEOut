@@ -5,6 +5,8 @@
  * cover letter generation via the background service worker.
  */
 
+import { listTextModels } from '../api/gemini.js';
+
 document.addEventListener('DOMContentLoaded', init);
 
 /* ── DOM References ──────────────────────────────── */
@@ -13,13 +15,11 @@ const $ = (id) => document.getElementById(id);
 /* ── Initialisation ──────────────────────────────── */
 async function init() {
   // Restore persisted state
-  const stored = await chrome.storage.local.get(['geminiApiKey', 'geminiModel', 'apiKeyValid', 'coopFooterType', 'includeCoopFooter']);
+  const stored = await chrome.storage.local.get(['geminiApiKey', 'geminiModel', 'geminiModels', 'apiKeyValid', 'coopFooterType', 'includeCoopFooter']);
   if (stored.geminiApiKey) {
     $('api-key-input').value = stored.geminiApiKey;
   }
-  if (stored.geminiModel) {
-    $('model-select').value = stored.geminiModel;
-  }
+  populateModelSelect(stored.geminiModels || [], stored.geminiModel);
   // Migrate legacy includeCoopFooter boolean to coopFooterType string
   if (stored.coopFooterType) {
     $('coop-footer-select').value = stored.coopFooterType;
@@ -31,6 +31,11 @@ async function init() {
 
   // Update generate button state based on API key validity
   updateGenerateButtonState(stored.apiKeyValid);
+
+  // Refresh the cached model list in the background
+  if (stored.geminiApiKey && stored.apiKeyValid) {
+    refreshModels(stored.geminiApiKey);
+  }
 
   // Bind events
   $('settings-toggle').addEventListener('click', toggleSettings);
@@ -107,12 +112,13 @@ async function saveApiKey() {
   // Show validating message
   showApiKeyStatus('Validating API key...', '');
   
-  // Validate API key with all models
-  const validationResult = await validateApiKey(key);
-  
-  if (validationResult.allValid) {
-    // All models accessible - save key and show success
-    await chrome.storage.local.set({ geminiApiKey: key, apiKeyValid: true });
+  // Validate API key by fetching its available models
+  try {
+    const models = await listTextModels(key);
+
+    // Key valid - save key and models, then show success
+    await chrome.storage.local.set({ geminiApiKey: key, apiKeyValid: true, geminiModels: models });
+    populateModelSelect(models, $('model-select').value);
     showApiKeyStatus('API key saved.', 'success');
     updateGenerateButtonState(true);
     
@@ -121,11 +127,10 @@ async function saveApiKey() {
     statusTimeout = setTimeout(() => {
       $('api-key-status').textContent = '';
     }, 2000);
-  } else {
-    // Some models inaccessible - show error and disable button
+  } catch (err) {
+    // Key invalid - show error and disable button
     await chrome.storage.local.set({ geminiApiKey: key, apiKeyValid: false });
-    const errorMsg = 'Inaccessible models: ' + validationResult.inaccessibleModels.join(', ');
-    showApiKeyStatus(errorMsg, 'error');
+    showApiKeyStatus(err.message, 'error');
     updateGenerateButtonState(false);
   }
 }
@@ -134,33 +139,6 @@ function showApiKeyStatus(message, type) {
   const el = $('api-key-status');
   el.textContent = message;
   el.className = `status-text ${type}`;
-}
-
-/* ── API Key Validation ──────────────────────────── */
-async function validateApiKey(apiKey) {
-  const modelSelect = $('model-select');
-  const models = Array.from(modelSelect.options).map(option => option.value);
-  
-  const results = await Promise.all(
-    models.map(async (model) => {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}?key=${apiKey}`;
-        const response = await fetch(url);
-        return { model, accessible: response.ok };
-      } catch (error) {
-        return { model, accessible: false };
-      }
-    })
-  );
-  
-  const inaccessibleModels = results
-    .filter(r => !r.accessible)
-    .map(r => r.model);
-  
-  return {
-    allValid: inaccessibleModels.length === 0,
-    inaccessibleModels
-  };
 }
 
 /* ── Generate Button State ───────────────────────── */
@@ -177,6 +155,25 @@ function updateGenerateButtonState(isValid) {
 }
 
 /* ── Model Selection ─────────────────────────────── */
+function populateModelSelect(models, selectedId) {
+  if (models.length === 0) return;
+
+  const select = $('model-select');
+  select.replaceChildren(...models.map(({ id, displayName }) => new Option(displayName, id)));
+  // Fall back to the first model if the selected one is no longer available
+  select.value = models.some(({ id }) => id === selectedId) ? selectedId : models[0].id;
+}
+
+async function refreshModels(apiKey) {
+  try {
+    const models = await listTextModels(apiKey);
+    await chrome.storage.local.set({ geminiModels: models });
+    populateModelSelect(models, $('model-select').value);
+  } catch {
+    // Keep the cached list if the refresh fails
+  }
+}
+
 async function saveModel() {
   await chrome.storage.local.set({ geminiModel: $('model-select').value });
 }

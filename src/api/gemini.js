@@ -1,13 +1,63 @@
 /**
- * api/gemini.js — Gemini API client for cover letter generation.
+ * api/gemini.js — Gemini API client for model listing and cover letter generation.
  *
- * Builds the prompt from the user-editable prompt and job data, then
- * calls the Gemini generateContent endpoint.
+ * Lists the text generation models available to an API key, and builds the
+ * prompt from the user-editable prompt and job data, then calls the Gemini
+ * generateContent endpoint.
  */
 
 import { DEFAULT_PROMPT } from './default-prompt.js';
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+// Models that aren't general-purpose text-in, text-out (media, speech, realtime, agentic, robotics)
+const NON_TEXT_MODEL_PATTERN = /image|tts|audio|live|transcribe|omni|computer-use|customtools|robotics/;
+// Dated snapshots (e.g. "-001", "-09-2025") of models already listed under their base ID
+const SNAPSHOT_MODEL_PATTERN = /-\d{2,4}(-\d{2,4})?$/;
+
+/**
+ * Fetches the text-in, text-out Gemini models available to the API key.
+ * Also serves as API key validation, since an invalid key throws.
+ *
+ * @param {string} apiKey — Gemini API key.
+ * @returns {Promise<Array<{ id: string, displayName: string }>>} — Sorted newest first.
+ */
+export async function listTextModels(apiKey) {
+  const models = [];
+  let pageToken;
+
+  do {
+    const params = new URLSearchParams({ key: apiKey, pageSize: 1000 });
+    if (pageToken) params.set('pageToken', pageToken);
+
+    const res = await fetch(`${GEMINI_API_BASE}?${params}`);
+    if (!res.ok) throw await apiError(res);
+
+    const data = await res.json();
+    models.push(...(data.models || []));
+    pageToken = data.nextPageToken;
+  } while (pageToken);
+
+  return models
+    .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
+    .map((m) => {
+      const id = m.name.replace(/^models\//, '');
+      return { id, displayName: m.displayName || id };
+    })
+    .filter(({ id }) =>
+      id.startsWith('gemini-') && !NON_TEXT_MODEL_PATTERN.test(id) && !SNAPSHOT_MODEL_PATTERN.test(id)
+    )
+    .sort((a, b) => modelVersion(b.id) - modelVersion(a.id) || a.displayName.localeCompare(b.displayName));
+}
+
+/**
+ * Extracts the version number from a model ID (e.g. "gemini-2.5-flash" → 2.5).
+ * Unversioned aliases (e.g. "gemini-flash-latest") return 0 so they sort last.
+ */
+function modelVersion(id) {
+  const match = id.match(/^gemini-(\d+(?:\.\d+)?)-/);
+  return match ? parseFloat(match[1]) : 0;
+}
 
 /**
  * Calls the Gemini API to generate a cover letter.
@@ -45,12 +95,7 @@ export async function generateCoverLetter({ apiKey, model, jobData, signal }) {
     signal
   });
 
-  if (!res.ok) {
-    const errBody = await res.json().catch(() => ({}));
-    const message =
-      errBody?.error?.message || `Gemini API error: ${res.status} ${res.statusText}`;
-    throw new Error(message);
-  }
+  if (!res.ok) throw await apiError(res);
 
   const data = await res.json();
 
@@ -82,4 +127,12 @@ async function buildPrompt(companyName, jobTitle, jobDescription) {
     .replace(/{companyName}/g, companyName)
     .replace(/{jobTitle}/g, jobTitle)
     .replace(/{jobDescription}/g, jobDescription);
+}
+
+/**
+ * Builds an Error from a failed Gemini API response.
+ */
+async function apiError(res) {
+  const errBody = await res.json().catch(() => ({}));
+  return new Error(errBody?.error?.message || `Gemini API error: ${res.status} ${res.statusText}`);
 }
