@@ -10,10 +10,11 @@ import { DEFAULT_PROMPT } from './default-prompt.js';
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-// Models that aren't general-purpose text-in, text-out (media, speech, realtime, agentic, robotics)
-const NON_TEXT_MODEL_PATTERN = /image|tts|audio|live|transcribe|omni|computer-use|customtools|robotics/;
-// Dated snapshots (e.g. "-001", "-09-2025") of models already listed under their base ID
-const SNAPSHOT_MODEL_PATTERN = /-\d{2,4}(-\d{2,4})?$/;
+// Models that aren't general-purpose text-in, text-out (media, speech, realtime, agentic, robotics),
+// matched as whole ID segments so unrelated IDs containing these letters aren't excluded
+const NON_TEXT_MODEL_PATTERN = /(^|-)(image|tts|audio|live|transcribe|omni|computer-use|customtools|robotics)(-|$)/;
+// Dated snapshot suffixes (e.g. "-001", "-09-2025")
+const SNAPSHOT_SUFFIX_PATTERN = /-\d{2,4}(-\d{2,4})?$/;
 
 /**
  * Fetches the text-in, text-out Gemini models available to the API key.
@@ -38,25 +39,41 @@ export async function listTextModels(apiKey) {
     pageToken = data.nextPageToken;
   } while (pageToken);
 
-  return models
+  const textModels = models
     .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
     .map((m) => {
       const id = m.name.replace(/^models\//, '');
       return { id, displayName: m.displayName || id };
     })
-    .filter(({ id }) =>
-      id.startsWith('gemini-') && !NON_TEXT_MODEL_PATTERN.test(id) && !SNAPSHOT_MODEL_PATTERN.test(id)
-    )
-    .sort((a, b) => modelVersion(b.id) - modelVersion(a.id) || a.displayName.localeCompare(b.displayName));
+    .filter(({ id }) => id.startsWith('gemini-') && !NON_TEXT_MODEL_PATTERN.test(id));
+
+  // Hide snapshots of models already listed under an undated ID, but keep models only released as snapshots
+  const undatedBaseIds = new Set(
+    textModels.filter(({ id }) => !SNAPSHOT_SUFFIX_PATTERN.test(id)).map(({ id }) => baseModelId(id))
+  );
+
+  return textModels
+    .filter(({ id }) => !SNAPSHOT_SUFFIX_PATTERN.test(id) || !undatedBaseIds.has(baseModelId(id)))
+    .sort((a, b) =>
+      modelVersion(b.id).localeCompare(modelVersion(a.id), undefined, { numeric: true }) ||
+      a.displayName.localeCompare(b.displayName)
+    );
 }
 
 /**
- * Extracts the version number from a model ID (e.g. "gemini-2.5-flash" → 2.5).
- * Unversioned aliases (e.g. "gemini-flash-latest") return 0 so they sort last.
+ * Strips snapshot and preview suffixes from a model ID
+ * (e.g. "gemini-2.5-flash-preview-09-2025" → "gemini-2.5-flash").
+ */
+function baseModelId(id) {
+  return id.replace(SNAPSHOT_SUFFIX_PATTERN, '').replace(/-(preview|exp)$/, '');
+}
+
+/**
+ * Extracts the version from a model ID (e.g. "gemini-2.5-flash" → "2.5").
+ * Unversioned aliases (e.g. "gemini-flash-latest") return "" so they sort last.
  */
 function modelVersion(id) {
-  const match = id.match(/^gemini-(\d+(?:\.\d+)?)-/);
-  return match ? parseFloat(match[1]) : 0;
+  return id.match(/^gemini-(\d+(?:\.\d+)?)(-|$)/)?.[1] ?? '';
 }
 
 /**
