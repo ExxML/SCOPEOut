@@ -306,6 +306,42 @@ select {
   color: #27ae60;
 }
 
+.status-text.warning {
+  color: #b9770e;
+}
+
+/* ── Confirm Actions ─────────────────────────────── */
+.confirm-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.confirm-actions .btn {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.btn-confirm-continue {
+  background: #002145;
+  color: #fff;
+}
+
+.btn-confirm-continue:hover {
+  background: #003366;
+}
+
+.btn-confirm-cancel {
+  background: transparent;
+  color: #002145;
+  border: 1px solid #002145;
+}
+
+.btn-confirm-cancel:hover {
+  background: rgba(0, 33, 69, 0.08);
+}
+
 /* ── Utility ─────────────────────────────────────── */
 .hidden {
   display: none !important;

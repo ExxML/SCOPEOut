@@ -47,6 +47,10 @@ async function init() {
     chrome.storage.local.set({ coopFooterType: $('coop-footer-select').value });
   });
   $('generate-btn').addEventListener('click', handleGenerate);
+  $('confirm-continue-btn').addEventListener('click', handleConfirmContinue);
+  $('confirm-cancel-btn').addEventListener('click', () => {
+    chrome.runtime.sendMessage({ action: 'cancelGeneration' });
+  });
   $('api-info-btn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://aistudio.google.com/welcome' });
   });
@@ -190,6 +194,7 @@ async function handleGenerationStateChange(state) {
   const btn = $('generate-btn');
   const spinner = $('btn-spinner');
   const btnText = $('btn-text');
+  $('confirm-actions').classList.toggle('hidden', state?.status !== 'confirm');
 
   if (!state || state.status === 'idle') {
     isGenerating = false;
@@ -207,6 +212,16 @@ async function handleGenerationStateChange(state) {
     spinner.classList.remove('hidden');
     btnText.textContent = 'Cancel';
     showStatus(state.message);
+    return;
+  }
+
+  // Awaiting confirmation: keep state so it persists across popup reopens
+  if (state.status === 'confirm') {
+    isGenerating = false;
+    btn.disabled = true;
+    spinner.classList.add('hidden');
+    btnText.textContent = 'Generate cover letter';
+    showStatus(state.message, 'warning');
     return;
   }
 
@@ -270,6 +285,16 @@ async function handleGenerate() {
     showStatus(err.message, 'error');
     isGenerating = false;
   }
+}
+
+// Resumes a paused generation with the already-scraped job data
+async function handleConfirmContinue() {
+  const { generationState } = await chrome.storage.session.get('generationState');
+  if (generationState?.status !== 'confirm') return;
+
+  const { geminiApiKey } = await chrome.storage.local.get('geminiApiKey');
+  const { jobData, model } = generationState;
+  chrome.runtime.sendMessage({ action: 'startGeneration', model, apiKey: geminiApiKey, jobData });
 }
 
 /* ── Status Helpers ──────────────────────────────── */

@@ -48,9 +48,11 @@ async function handleGenerate({ apiKey, model, jobData }) {
 /**
  * Runs the full generation workflow in the background:
  * scrapes job data, calls Gemini, and opens the preview tab.
+ * If any job details are missing, pauses for user confirmation before calling Gemini;
+ * a confirmed resume passes the scraped jobData back in to skip scraping.
  * Progress is stored in session storage so the popup can track it.
  */
-async function handleStartGeneration({ tabId, model, apiKey }) {
+async function handleStartGeneration({ tabId, model, apiKey, jobData }) {
   // Abort any existing generation
   if (generationAbortController) {
     generationAbortController.abort();
@@ -59,20 +61,34 @@ async function handleStartGeneration({ tabId, model, apiKey }) {
   const { signal } = generationAbortController;
 
   try {
-    await chrome.storage.session.set({
-      generationState: { status: 'generating', message: 'Extracting job details…' }
-    });
+    if (!jobData) {
+      await chrome.storage.session.set({
+        generationState: { status: 'generating', message: 'Extracting job details…' }
+      });
 
-    const [result] = await chrome.scripting.executeScript({
-      target: { tabId },
-      files: ['content/scraper.js']
-    });
+      const [result] = await chrome.scripting.executeScript({
+        target: { tabId },
+        files: ['content/scraper.js']
+      });
 
-    if (signal.aborted) return;
+      if (signal.aborted) return;
 
-    const jobData = result.result;
-    if (!jobData || !jobData.jobDescription) {
-      throw new Error('Could not extract all necessary job details. Make sure you are on a valid UBC Co-op job posting page.');
+      jobData = result.result;
+      if (!jobData || !jobData.jobDescription) {
+        throw new Error('Could not extract all necessary job details. Make sure you are on a valid UBC Co-op job posting page.');
+      }
+
+      if (jobData.missingFields.length) {
+        await chrome.storage.session.set({
+          generationState: {
+            status: 'confirm',
+            message: `Could not extract: ${jobData.missingFields.join(', ')}.\nContinue with unknown values?`,
+            jobData,
+            model
+          }
+        });
+        return;
+      }
     }
 
     await chrome.storage.session.set({

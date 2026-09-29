@@ -67,10 +67,17 @@
     // Job Description
     const jobDescription = getValueFromPanel('JOB POSTING INFORMATION', 'Job Description');
 
+    const missingFields = [
+      !cleanCompanyName && 'Company Name',
+      !cleanJobTitle && 'Job Title',
+      !jobDescription && 'Job Description'
+    ].filter(Boolean);
+
     return {
       companyName: cleanCompanyName || 'Unknown Company',
       jobTitle: cleanJobTitle || 'Unknown Job Title',
-      jobDescription: jobDescription || 'Unknown Job Description'
+      jobDescription: jobDescription || 'Unknown Job Description',
+      missingFields
     };
   }
 
