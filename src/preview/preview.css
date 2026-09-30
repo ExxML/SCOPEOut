@@ -14,7 +14,7 @@ html, body {
 }
 
 .pages-container {
-  padding: 32px 0;
+  padding: 16px 0;
   margin-top: var(--banner-height, 0px);
 }
 
@@ -182,8 +182,9 @@ html, body {
   margin: 0 auto 32px auto;
 }
 
-.page-wrapper:last-of-type {
-  margin-bottom: 0;
+/* Last page: center the add-page strip between the page and container bottom */
+.page-wrapper:has(+ .add-page-strip) {
+  margin-bottom: 16px;
 }
 
 /* move .page margin management to wrapper */
@@ -332,52 +333,15 @@ html, body {
   left: 16px;
   z-index: 1000;
   font-family: 'Segoe UI', system-ui, sans-serif;
-}
-
-.job-info-toggle {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #fff;
-  color: #002145;
-  border: 1.5px solid #002145;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.job-info-toggle:hover {
-  background: #002145;
-  color: #fff;
-}
-
-.job-info-content {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
   width: 340px;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
   padding: 16px;
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.job-info-content::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: 0;
-  right: 0;
-  height: 8px;
-}
-
-.job-info-panel:hover .job-info-content {
-  display: flex;
 }
 
 .job-info-row {
@@ -428,6 +392,7 @@ html, body {
 
   .pages-container {
     padding: 0;
+    margin-top: 0;
   }
 
   .page {
@@ -443,13 +408,6 @@ html, body {
 
   .cl-body {
     flex: 1;
-  }
-
-  .cl-footer--science {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
   }
 
   .cl-footer--eng {
@@ -482,7 +440,8 @@ html, body {
     display: none !important;
   }
 
-  .page-wrapper {
+  .page-wrapper,
+  .page-wrapper:has(+ .add-page-strip) {
     width: 100%;
     margin: 0;
   }
