@@ -126,18 +126,25 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
   if (footerType !== 'none') await addFooter(currentPage, footerType);
 
   container.appendChild(currentWrapper);
+  alignBodyToLineGrid(currentPage, body);
 
   // Add paragraphs, creating new pages as needed
   for (const paraHTML of paragraphs) {
     const tempP = document.createElement('div');
     tempP.innerHTML = paraHTML;
     const para = tempP.firstChild;
+
+    // Separate paragraphs with an empty line (none at the top of a page)
+    const spacer = document.createElement('p');
+    spacer.appendChild(document.createElement('br'));
+    if (body.hasChildNodes()) body.appendChild(spacer);
     body.appendChild(para);
 
     // Force reflow before measuring — scrollHeight is stale without it
     void currentPage.offsetHeight;
     if (currentPage.scrollHeight > currentPage.clientHeight) {
-      // Remove the paragraph that caused overflow
+      // Remove the paragraph (and its spacer) that caused overflow
+      spacer.remove();
       body.removeChild(para);
 
       // Create new page with footer pre-added
@@ -150,6 +157,7 @@ async function renderMultiPageLetter(companyName, jobTitle, bodyText, footerType
       currentPage.appendChild(newBody);
       if (footerType !== 'none') await addFooter(currentPage, footerType);
       container.appendChild(currentWrapper);
+      alignBodyToLineGrid(currentPage, newBody);
 
       // Add the paragraph to new page
       newBody.appendChild(para);
@@ -258,6 +266,18 @@ function preventPageOverflow(page) {
 }
 
 /**
+ * Trims the body's bottom to a whole number of lines so the last
+ * editable line meets the outline instead of leaving a partial-line gap.
+ */
+function alignBodyToLineGrid(page, body) {
+  const lineHeight = parseFloat(getComputedStyle(body).lineHeight);
+  const bottomLimit = page.getBoundingClientRect().top + page.clientHeight
+    - parseFloat(getComputedStyle(page).paddingBottom);
+  const available = bottomLimit - body.getBoundingClientRect().top;
+  body.style.marginBottom = `${available % lineHeight}px`;
+}
+
+/**
  * Returns the child-index path from root to node.
  */
 function getNodePath(root, node) {
@@ -318,6 +338,7 @@ function buildAddPageStrip() {
     // Insert wrapper before the strip
     const strip = container.querySelector('.add-page-strip');
     container.insertBefore(wrapper, strip);
+    alignBodyToLineGrid(page, body);
     updatePageControls(container);
   });
 

@@ -91,7 +91,7 @@ html, body {
   margin: 0;
   /* Bottom reserves footer space (~1.05in for either footer) */
   padding: 0.5in 0.8in 1.05in;
-  line-height: 1.4;
+  line-height: 1.35;
   background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -125,13 +125,7 @@ html, body {
 }
 
 .cl-body p {
-  margin-bottom: 12pt;
   text-indent: 0;
-}
-
-/* Let the last line reach the bottom limit */
-.cl-body p:last-child {
-  margin-bottom: 0;
 }
 
 /* ── Links ───────────────────────────────────────── */
