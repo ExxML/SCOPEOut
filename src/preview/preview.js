@@ -171,6 +171,7 @@ function createPage() {
   const page = document.createElement('div');
   page.className = 'page';
   wrapper.appendChild(page);
+  preventPageOverflow(page);
 
   const removeBtn = document.createElement('button');
   removeBtn.className = 'remove-page-btn';
@@ -210,6 +211,68 @@ function createPage() {
   });
 
   return { wrapper, page };
+}
+
+/**
+ * Reverts any edit that pushes page content past the bottom limit
+ * (top of the footer). Edits that don't grow an already
+ * overflowing page are allowed so the user can still trim it.
+ */
+function preventPageOverflow(page) {
+  let snapshot = null;
+
+  page.addEventListener('beforeinput', (e) => {
+    // Paste targets the inner node under the caret, not the editable host
+    const host = e.target.closest('[contenteditable="true"]');
+    const sel = window.getSelection();
+    const range = sel.rangeCount ? sel.getRangeAt(0) : null;
+    snapshot = {
+      host,
+      clone: host.cloneNode(true),
+      height: page.scrollHeight,
+      range: range && host.contains(range.startContainer) && host.contains(range.endContainer) ? {
+        start: getNodePath(host, range.startContainer),
+        startOffset: range.startOffset,
+        end: getNodePath(host, range.endContainer),
+        endOffset: range.endOffset
+      } : null
+    };
+  });
+
+  page.addEventListener('input', () => {
+    if (!snapshot) return;
+    const { host, clone, height, range } = snapshot;
+    snapshot = null;
+    if (page.scrollHeight <= Math.max(page.clientHeight, height)) return;
+
+    host.replaceChildren(...clone.childNodes);
+    if (range) {
+      const restored = document.createRange();
+      restored.setStart(resolveNodePath(host, range.start), range.startOffset);
+      restored.setEnd(resolveNodePath(host, range.end), range.endOffset);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(restored);
+    }
+  });
+}
+
+/**
+ * Returns the child-index path from root to node.
+ */
+function getNodePath(root, node) {
+  const path = [];
+  for (; node !== root; node = node.parentNode) {
+    path.unshift(Array.prototype.indexOf.call(node.parentNode.childNodes, node));
+  }
+  return path;
+}
+
+/**
+ * Resolves a child-index path (from getNodePath) back to a node under root.
+ */
+function resolveNodePath(root, path) {
+  return path.reduce((node, i) => node.childNodes[i], root);
 }
 
 /**
@@ -270,6 +333,7 @@ function addFooter(page, footerType) {
   const footer = document.createElement('footer');
   footer.className = footerType === 'eng' ? 'cl-footer--eng' : 'cl-footer--science';
   const logo = document.createElement('img');
+  logo.draggable = false;
   if (footerType === 'eng') {
     logo.src = chrome.runtime.getURL('assets/eng_coop_footer.png');
     logo.alt = 'UBC Engineering Co-op';
