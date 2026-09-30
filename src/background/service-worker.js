@@ -60,6 +60,10 @@ async function handleStartGeneration({ tabId, model, apiKey, jobData }) {
   generationAbortController = new AbortController();
   const { signal } = generationAbortController;
 
+  // Pending fetches don't reset the worker's 30s idle timer, but extension API calls do,
+  // so ping one to stop Chrome terminating the worker during a slow Gemini response
+  const keepAlive = setInterval(chrome.runtime.getPlatformInfo, 20 * 1000);
+
   try {
     if (!jobData) {
       await chrome.storage.session.set({
@@ -116,6 +120,7 @@ async function handleStartGeneration({ tabId, model, apiKey, jobData }) {
       generationState: { status: 'error', message: err.message }
     });
   } finally {
+    clearInterval(keepAlive);
     if (generationAbortController?.signal === signal) {
       generationAbortController = null;
     }
