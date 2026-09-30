@@ -91,6 +91,7 @@ html, body {
   margin: 0;
   /* Bottom reserves footer space (~1.05in for either footer) */
   padding: 0.5in 0.8in 1.05in;
+  line-height: 1.4;
   background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -103,7 +104,6 @@ html, body {
 /* ── Header ──────────────────────────────────────── */
 .cl-header {
   margin-bottom: 24pt;
-  line-height: 1.6;
   outline: none;
 }
 
@@ -114,7 +114,6 @@ html, body {
 
 /* ── Body ────────────────────────────────────────── */
 .cl-body {
-  line-height: 1.5;
   outline: none;
   white-space: pre-wrap;
   flex: 1;
