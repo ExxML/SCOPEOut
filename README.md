@@ -18,10 +18,11 @@ An extension that generates custom cover letters for UBC Co-op jobs in a single 
 ## 📑 Table of Contents
 - [👀 App Preview](#-app-preview)
 - [✨ Features](#-features)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📁 Project Structure](#-project-structure)
-- [🚀 Getting Started](#-getting-started)
+- [🛠️ Installation](#️-installation)
+- [🚀 First-time Setup](#-first-time-setup)
 - [⚙️ Configuration](#️-configuration)
+- [💻 Tech Stack](#-tech-stack)
+- [📁 Project Structure](#-project-structure)
 - [🤖 How It Works](#-how-it-works)
 - [📝 License](#-license)
 
@@ -43,7 +44,56 @@ An extension that generates custom cover letters for UBC Co-op jobs in a single 
 - **Custom Prompts**: Fully adjustable AI prompts with dynamic placeholders for job details such as the company name, job title, and job description.
 - **Multi-Model Support**: Toggle between different Gemini AI models with any API key.
 
-## 🛠️ Tech Stack
+## 🛠️ Installation
+
+- Follow the steps below to load the extension from source, or simply install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/neogidhokkpmbgddpofkfjodfpkidgaf?utm_source=item-share-cb).
+
+1. **Clone or download** this repository:
+   ```bash
+   git clone https://github.com/ExxML/SCOPEOut.git
+   ```
+2. Open your browser and navigate to the **Manage Extensions** page.
+3. Enable **Developer mode**.
+4. Click **Load unpacked** and select the `src/` folder inside the cloned repository.
+
+Note: This extension requires a Chromium-based browser that supports Manifest V3. Most modern browsers are compatible.
+
+## 🚀 First-time Setup
+
+1. Click SCOPEOut in the Extensions menu to open the extension.
+2. Click **Settings** to expand the settings panel.
+3. Get a free [Gemini API key](https://aistudio.google.com/welcome) and paste it in the field.
+4. Click **Save**. SCOPEOut will validate the key and fetch its available models. Once the key is confirmed to be valid, the **Generate cover letter** button will become enabled.
+5. Stay in the settings panel and select the **Co-op Footer Image** you wish to use (if any).
+6. Click **Edit prompt** and personalize your AI prompt by replacing the example text with your experiences/skills. Refer to [Customising the Prompt](#customising-the-prompt) for more detailed instructions.
+7. Once you have made your edits and saved your prompt, return to the extension and select your desired AI model. Refer to [Choosing the Right Model](#choosing-the-right-model) to pick the model that works for you.
+8. The setup has been completed! You can now open any UBC Co-op job posting, click **Generate cover letter**, **Download PDF**, and ship your personalized cover letter to your dream company!
+
+## ⚙️ Configuration
+
+### Customising the Prompt
+
+1. Open the popup and expand **Settings**.
+2. Click **Edit prompt** to open the Prompt Editor in a new tab.
+3. Modify the template as desired. Three placeholders are available:
+    - `{companyName}` : the organisation name scraped from the posting
+    - `{jobTitle}` : the cleaned job title scraped from the posting
+    - `{jobDescription}` : the full job description scraped from the posting
+4. Click **Save Prompt**. The tab title shows `(*)` while there are unsaved changes.
+5. Click **Restore Default** to revert to the built-in template at any time.
+
+> [!NOTE]
+> This prompt is saved in your browser's local storage. Therefore, clearing your browser data or uninstalling SCOPEOut will delete your prompt, so we recommend keeping a backup in a separate document.
+
+### Choosing the Right Model
+
+Use the **Model** dropdown in the popup to choose a Gemini model. The list is fetched from the Gemini API each time the popup opens, so new models appear automatically and deprecated ones are removed. Only general-purpose text-in, text-out models (including previews and `-latest` aliases) are shown, sorted newest first.
+
+The newest Gemini models are often under heavy load and requests may frequently get rejected (and still use up your quota). If consistency matters to you, we recommend using slightly less popular models to avoid these hiccups.
+
+Free tier rate limits vary by model; see [Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) for up-to-date quotas.
+
+## 💻 Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -83,57 +133,6 @@ SCOPEOut/
 │       └── prompt-editor.js         # Prompt editor controller: load, save, restore default
 └── README.md
 ```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Google Chrome (or any Chromium-based browser that supports Manifest V3)
-- A free [Google Gemini API key](https://aistudio.google.com/welcome)
-
-### Installation
-
-1. **Clone or download** this repository:
-   ```bash
-   git clone https://github.com/ExxML/SCOPEOut.git
-   ```
-
-2. Open Chrome and navigate to `chrome://extensions/`.
-
-3. Enable **Developer mode** (toggle in the top-right corner).
-
-4. Click **Load unpacked** and select the `src/` folder inside the cloned repository.
-
-### First-time Setup
-
-1. Click the SCOPEOut icon to open the popup.
-2. Click **Settings** to expand the settings panel.
-3. Paste your Gemini API key into the field.
-4. Click **Save** (the extension will validate the key and fetch its available models).
-5. Once the key is confirmed valid, the **Generate cover letter** button will become available.
-
-## ⚙️ Configuration
-
-### Selecting a Model
-
-Use the **Model** dropdown in the popup to choose a Gemini model. The list is fetched from the Gemini API each time the popup opens, so new models appear automatically and deprecated ones are removed. Only general-purpose text-in, text-out models (including previews and `-latest` aliases) are shown, sorted newest first.
-
-Free tier rate limits vary by model; see [Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) for current values.
-
-### Customising the Prompt
-
-1. Open the popup and expand **Settings**.
-2. Click **Edit prompt** to open the Prompt Editor in a new tab.
-3. Modify the template as desired. Three placeholders are available:
-    - `{companyName}` : the organisation name scraped from the posting
-    - `{jobTitle}` : the cleaned job title scraped from the posting
-    - `{jobDescription}` : the full job description scraped from the posting
-4. Click **Save Prompt**. The tab title shows `(*)` while there are unsaved changes.
-5. Click **Restore Default** to revert to the built-in template at any time.
-
-> [!NOTE]
-> This prompt is saved in your browser's local storage. Therefore, clearing your browser data or uninstalling SCOPEOut will delete your prompt, so we recommend keeping a backup in a separate document.
-
 
 ## 🤖 How It Works
 

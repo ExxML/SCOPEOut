@@ -96,6 +96,21 @@ body {
 }
 
 /* ── Settings Toggle ─────────────────────────────── */
+.settings-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.setup-link {
+  font-size: 11px;
+  color: #002145;
+}
+
+.setup-link:hover {
+  color: #003366;
+}
+
 .settings-toggle {
   display: flex;
   align-items: center;
