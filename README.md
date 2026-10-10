@@ -41,7 +41,7 @@ An extension that generates custom cover letters for UBC Co-op jobs in a single 
 - **One-click Generation**: Navigate to any UBC Co-op job posting and SCOPEOut will scrape the company name, job title, and full job description and feed your customised prompt into Gemini.
 - **Automatic Formatting**: Every generated document will automatically include the company name, date, and job title in the header, and an optional UBC Science Co-op or Engineering Co-op banner in the footer.
 - **In-browser Editing**: Edit any part of the generated cover letter before saving as a PDF.
-- **Custom Prompts**: Fully adjustable AI prompts with dynamic placeholders for job details such as the company name, job title, and job description.
+- **Custom Prompts**: Fully adjustable AI prompts with dynamic placeholders for job details such as the hiring manager, company name, job title, and job description.
 - **Multi-Model Support**: Toggle between different Gemini AI models with any API key.
 
 ## 🛠️ Installation
@@ -75,7 +75,8 @@ Note: This extension requires a Chromium-based browser that supports Manifest V3
 
 1. Open the popup and expand **Settings**.
 2. Click **Edit prompt** to open the Prompt Editor in a new tab.
-3. Modify the template as desired. Three placeholders are available:
+3. Modify the template as desired. Four placeholders are available:
+    - `{hiringManager}` : the cover letter addressee scraped from the posting (defaults to "Hiring Manager")
     - `{companyName}` : the organisation name scraped from the posting
     - `{jobTitle}` : the cleaned job title scraped from the posting
     - `{jobDescription}` : the full job description scraped from the posting
@@ -147,7 +148,7 @@ Sends "startGeneration" message → service-worker.js
         │
         ▼
 chrome.scripting.executeScript injects content/scraper.js
-        │   Extracts: companyName, jobTitle, jobDescription
+        │   Extracts: hiringManager, companyName, jobTitle, jobDescription
         ▼
 gemini.js builds prompt (replaces placeholders in stored/default template)
         │

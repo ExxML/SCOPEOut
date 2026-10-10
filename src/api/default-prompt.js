@@ -1,14 +1,14 @@
 /**
  * api/default-prompt.js — Default AI prompt.
  *
- * This prompt uses placeholders {companyName}, {jobTitle}, and {jobDescription}
+ * This prompt uses placeholders {hiringManager}, {companyName}, {jobTitle}, and {jobDescription}
  * that get replaced with actual values when generating the cover letter.
  */
 
 export const DEFAULT_PROMPT = `Based on the following job description for {companyName} as a {jobTitle}, fill in the blanks for my cover letter. For the second body paragraph, choose one of the "Python/Developer", "Fullstack/Web/Javascript", or "Java/OOD/TDD" paragraphs that best fits this role.
 
 --- COVER LETTER TEMPLATE ---
-Dear Hiring Manager,
+Dear {hiringManager},
 
 <Introductory paragraph expressing interest in the role and company, and a brief overview of qualifications.>
 

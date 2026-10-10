@@ -2,7 +2,7 @@
  * prompt-editor/prompt-editor.js — Prompt editor controller.
  *
  * Allows users to edit the AI prompt with placeholders like
- * {companyName}, {jobTitle}, and {jobDescription}.
+ * {hiringManager}, {companyName}, {jobTitle}, and {jobDescription}.
  */
 
 import { DEFAULT_PROMPT } from '../api/default-prompt.js';
@@ -30,7 +30,7 @@ function init() {
   });
 }
 
-const KNOWN_PLACEHOLDERS = new Set(['companyName', 'jobTitle', 'jobDescription']);
+const KNOWN_PLACEHOLDERS = new Set(['hiringManager', 'companyName', 'jobTitle', 'jobDescription']);
 
 function updateWarning(text) {
   const unusedPlaceholders = [...KNOWN_PLACEHOLDERS].filter(p => !text.includes(`{${p}}`));

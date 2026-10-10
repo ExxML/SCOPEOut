@@ -82,14 +82,14 @@ function modelVersion(id) {
  * @param {Object} params
  * @param {string} params.apiKey   — Gemini API key.
  * @param {string} params.model    — Model ID (e.g. "gemini-2.5-flash").
- * @param {Object} params.jobData  — { companyName, jobTitle, jobDescription }.
+ * @param {Object} params.jobData  — { hiringManager, companyName, jobTitle, jobDescription }.
  * @param {AbortSignal} [params.signal] — Optional signal to abort the request.
  * @returns {Promise<string>}      — The generated cover letter body text.
  */
 export async function generateCoverLetter({ apiKey, model, jobData, signal }) {
-  const { companyName, jobTitle, jobDescription } = jobData;
+  const { hiringManager, companyName, jobTitle, jobDescription } = jobData;
 
-  const prompt = await buildPrompt(companyName, jobTitle, jobDescription);
+  const prompt = await buildPrompt(hiringManager, companyName, jobTitle, jobDescription);
 
   const url = `${GEMINI_API_BASE}/${model}:generateContent?key=${apiKey}`;
 
@@ -132,7 +132,7 @@ export async function generateCoverLetter({ apiKey, model, jobData, signal }) {
 /**
  * Builds the full prompt sent to Gemini from the stored prompt.
  */
-async function buildPrompt(companyName, jobTitle, jobDescription) {
+async function buildPrompt(hiringManager, companyName, jobTitle, jobDescription) {
   // Load the prompt from storage
   const { prompt } = await chrome.storage.local.get('prompt');
   
@@ -143,7 +143,8 @@ async function buildPrompt(companyName, jobTitle, jobDescription) {
   return promptText
     .replace(/{companyName}/g, companyName)
     .replace(/{jobTitle}/g, jobTitle)
-    .replace(/{jobDescription}/g, jobDescription);
+    .replace(/{jobDescription}/g, jobDescription)
+    .replace(/{hiringManager}/g, hiringManager);
 }
 
 /**

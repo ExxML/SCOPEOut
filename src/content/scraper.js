@@ -2,7 +2,7 @@
  * content/scraper.js — Content script injected into UBC Co-op job posting pages.
  *
  * Uses the parseJobDetails() logic from job_details_parser.js to extract
- * company name, job title, and job description from the DOM.
+ * hiring manager, company name, job title, and job description from the DOM.
  *
  * This file is executed via chrome.scripting.executeScript() and returns
  * the extracted data as the script's result.
@@ -43,6 +43,9 @@
    * parseJobDetails — Extracts structured job data from a UBC Co-op posting page.
    */
   function parseJobDetails() {
+    // Hiring Manager (optional on some postings)
+    const hiringManager = getValueFromPanel('APPLICATION INFORMATION', 'Address Cover Letter to');
+
     // Company Name
     const rawCompanyName =
       getValueFromPanel('ORGANIZATION INFORMATION', 'Organization') ||
@@ -74,6 +77,7 @@
     ].filter(Boolean);
 
     return {
+      hiringManager: hiringManager || 'Hiring Manager',
       companyName: cleanCompanyName || 'Unknown Company',
       jobTitle: cleanJobTitle || 'Unknown Job Title',
       jobDescription: jobDescription || 'Unknown Job Description',
