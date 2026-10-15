@@ -12,7 +12,7 @@ const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models
 
 // Models that aren't general-purpose text-in, text-out (media, speech, realtime, agentic, robotics),
 // matched as whole ID segments so unrelated IDs containing these letters aren't excluded
-const NON_TEXT_MODEL_PATTERN = /(^|-)(image|tts|audio|live|transcribe|omni|computer-use|customtools|robotics)(-|$)/;
+const NON_TEXT_MODEL_PATTERN = /(^|-)(image|tts|audio|live|transcribe|omni|computer-use|customtools|robotics|nano-banana)(-|$)/;
 // Dated snapshot suffixes (e.g. "-001", "-09-2025")
 const SNAPSHOT_SUFFIX_PATTERN = /-\d{2,4}(-\d{2,4})?$/;
 
